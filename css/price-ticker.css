@@ -1,0 +1,135 @@
+/* =========================
+PREMIUM CRYPTO TICKER
+========================= */
+
+.ticker{
+position:relative;
+overflow:hidden;
+background:#f6f7fb;
+border-radius:12px;
+margin-bottom:14px;
+padding:10px 0;
+box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+
+.dark .ticker{
+background:#1f2330;
+}
+
+/* =========================
+TICKER TRACK
+========================= */
+
+.ticker-track{
+display:flex;
+align-items:center;
+gap:50px;
+white-space:nowrap;
+width:max-content;
+animation:tickerMove 25s linear infinite;
+font-weight:600;
+}
+
+/* pause animation saat hover */
+
+.ticker:hover .ticker-track{
+animation-play-state:paused;
+}
+
+
+/* =========================
+TICKER ITEM
+========================= */
+
+.ticker-item{
+display:flex;
+align-items:center;
+gap:8px;
+font-size:14px;
+color:#333;
+font-weight:600;
+}
+
+.dark .ticker-item{
+color:#ddd;
+}
+
+.ticker-icon{
+width:18px;
+height:18px;
+}
+
+/* token name */
+
+.ticker-token{
+font-weight:700;
+}
+
+/* price */
+
+.ticker-price{
+color:#1c8c4c;
+font-weight:700;
+margin-left:4px;
+}
+
+/* separator */
+
+.ticker-sep{
+opacity:0.4;
+margin:0 4px;
+}
+
+/* rule price */
+
+.ticker-rule{
+font-size:12px;
+opacity:0.8;
+}
+
+
+/* =========================
+ANIMATION
+========================= */
+
+@keyframes tickerMove{
+
+0%{
+transform:translateX(0);
+}
+
+100%{
+transform:translateX(-50%);
+}
+
+}
+
+
+/* =========================
+NOTE TEXT
+========================= */
+
+.ticker-note{
+font-size:12px;
+opacity:0.6;
+margin-top:-6px;
+margin-bottom:12px;
+text-align:center;
+}
+
+.ticker-item:hover{
+transform:scale(1.05);
+transition:0.2s;
+}
+
+.market-status{
+font-size:12px;
+padding:2px 6px;
+border-radius:6px;
+margin-left:6px;
+}
+
+.market-status.live{
+background:#0f5132;
+color:#4cff9a;
+}
