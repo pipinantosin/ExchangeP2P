@@ -1,0 +1,21 @@
+{
+  "wa_number": "6285322882512",
+  "wallets": {
+    "SDA": "0xD18bCb2C5dD29cDf00Fd8c6a0F63158FE644A8a7",
+    "PI": "GAHM5IWEXIKMZ4DXBGLSZPFGR6WNH7HJIFJONOQ3J35AX7V5ZVKCPINW"
+  },
+  "SDA": {
+    "name": "SDA",
+    "logo": "images/sda.png",
+    "normal_price": 500,
+    "below_min_price": 300,
+    "min_sell": 200
+  },
+  "PI": {
+    "name": "PI",
+    "logo": "images/pi.png",
+    "normal_price": 2500,
+    "below_min_price": 2300,
+    "min_sell": 10
+  }
+}
