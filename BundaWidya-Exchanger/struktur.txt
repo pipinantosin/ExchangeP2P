@@ -1,0 +1,30 @@
+bundawidya-exchanger
+│
+├── index.html
+│
+├── css
+│   ├── style.css
+│   ├── dashboard.css
+│   ├── modal.css
+│   └── toast.css
+│
+├── js
+│   ├── app.js
+│   ├── account.js
+│   ├── price.js
+│   ├── exchanger.js
+│   ├── history.js
+│   ├── qr.js
+│   ├── wa.js
+│   └── toast.js
+│
+├── data
+│   └── payments.json
+│
+└── images
+    └── banks
+        ├── bca.png
+        ├── bri.png
+        ├── dana.png
+        ├── ovo.png
+        └── gopay.png
