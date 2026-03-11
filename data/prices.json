@@ -6,16 +6,16 @@
   },
   "SDA": {
     "name": "SDA",
-    "logo": "images/SDA.png",
-    "normal_price": 500,
-    "below_min_price": 300,
-    "min_sell": 200
+    "logo": "images/sda.png",
+    "normal_price": 450,
+    "below_min_price": 350,
+    "min_sell": 500
   },
   "PI": {
     "name": "PI",
-    "logo": "images/PI.png",
-    "normal_price": 2500,
-    "below_min_price": 2300,
-    "min_sell": 10
+    "logo": "images/pi.png",
+    "normal_price": 3400,
+    "below_min_price": 3300,
+    "min_sell": 500
   }
 }
