@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BundaWidya Exchanger Admin Tool</title>
+
+<style>
+body { font-family: Arial, sans-serif; background: #f5f5f5; margin:0; padding:0; }
+.container { max-width:900px; margin:auto; padding:20px; }
+h1 { text-align:center; margin-bottom:30px; }
+.card { background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1); margin-bottom:20px; }
+.card input { width:calc(100% - 20px); padding:10px; margin:5px 0 15px 0; border-radius:8px; border:1px solid #ccc; }
+.card label { font-weight:bold; display:block; margin-top:10px; }
+.btn { background:#007bff; color:#fff; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; margin-top:10px; margin-right:5px; }
+.btn:hover { background:#0056b3; }
+.json-output { width:100%; height:200px; padding:10px; font-family: monospace; border-radius:8px; border:1px solid #ccc; }
+.token-section { margin-bottom:15px; padding:10px; background:#f0f8ff; border-radius:8px; position:relative; }
+.token-section h3 { margin-top:0; display:inline-block; }
+.remove-token { position:absolute; top:10px; right:10px; background:#ff4d4d; border:none; color:#fff; padding:3px 8px; border-radius:50%; cursor:pointer; }
+.remove-token:hover { background:#cc0000; }
+
+.lock-btn {
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.lock-btn.locked {
+  background: #ff4d4d;
+  color: #fff;
+  transform: rotate(0deg);
+}
+
+.lock-btn.unlocked {
+  background: #28a745;
+  color: #fff;
+  transform: rotate(20deg);
+}
+</style>
+
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>BundaWidya Exchanger Admin Tool</h1>
+
+<!-- WA -->
+<div class="card">
+
+<h2>Nomor WhatsApp</h2>
+
+<input id="waNumber" placeholder="0853xxxx">
+
+</div>
+
+
+<!-- TOKEN -->
+<div class="card">
+
+<h2>TOKEN & ATURAN JUAL</h2>
+
+<div id="tokensContainer"></div>
+
+<button class="btn" onclick="addCustomToken()">+ Add Token</button>
+
+<button class="btn" onclick="saveAllSettings()"> Save</button>
+
+</div>
+
+<!-- Upload -->
+<div class="card">
+    <h2>Upload ke GitHub</h2>
+
+    <label for="classicToken">Token Clasic:</label>
+    <input type="password" id="classicToken" placeholder="⚠️ Hati-hati, simpan aman!">
+    <a href="https://github.com/settings/tokens/new?type=classic" target="_blank">Belum punya? Buat token klasik</a>
+
+    <label for="githubUser">Nama Akun GitHub:</label>
+    <input type="text" id="githubUser" placeholder="misal: atosusername">
+
+    <label for="githubRepo">Nama Repo:</label>
+    <input type="text" id="githubRepo" placeholder="misal: myrepo">
+
+    <p>File target: <b>data/prices.json</b></p>
+
+    <button class="btn" onclick="uploadToGitHub()">Upload</button>
+</div>
+
+<div class="card">
+  <h2>Upload ZIP ke GitHub (dengan progress)</h2>
+  <input type="file" id="zipFiles" multiple webkitdirectory>
+  <button class="btn" onclick="uploadZipWithProgress()">Upload ZIP</button>
+  <div id="progressWrapper" style="margin-top:10px; display:none;">
+    <div style="background:#eee; width:100%; border-radius:8px; overflow:hidden;">
+      <div id="progressBar" style="width:0%; height:20px; background:#28a745;"></div>
+    </div>
+    <p id="progressText">0%</p>
+  </div>
+</div>
+
+
+
+
+
+<!-- JSON -->
+<div class="card">
+
+<h2>Preview JSON</h2>
+
+<textarea id="jsonOutput" class="json-output"></textarea>
+
+<br><br>
+
+<button class="btn" onclick="copyJSON()">Copy JSON</button>
+
+</div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.11.0/jszip.min.js"></script>
+<script>
+
+function formatWA(num){
+
+num=num.replace(/\D/g,'')
+
+if(num.startsWith("0")) return "62"+num.substring(1)
+
+if(num.startsWith("8")) return "62"+num
+
+if(num.startsWith("62")) return num
+
+return num
+
+}
+
+document.getElementById("waNumber").addEventListener("input",function(){
+
+this.value=formatWA(this.value)
+
+})
+
+
+
+if(!localStorage.getItem("tokens")){
+
+const def={
+
+sidra:{
+wallet:"",
+normal_price:500,
+below_min_price:450,
+min_sell:100
+},
+
+pi:{
+wallet:"",
+normal_price:2500,
+below_min_price:2300,
+min_sell:10
+}
+
+}
+
+localStorage.setItem("tokens",JSON.stringify(def))
+
+}
+
+
+document.getElementById("waNumber").value=localStorage.getItem("waNumber")||""
+
+
+function renderTokens(){
+
+const tokens=JSON.parse(localStorage.getItem("tokens"))
+
+const container=document.getElementById("tokensContainer")
+
+container.innerHTML=""
+
+for(const key in tokens){
+
+const t=tokens[key]
+
+const div=document.createElement("div")
+
+div.className="token-section"
+
+let remove=""
+
+if(key!=="PI" && key!=="SDA"){
+
+remove=`<button class="remove-token" onclick="removeToken('${key}')">�</button>`
+
+}
+
+div.innerHTML=`
+
+<h3>${key}</h3>
+
+${remove}
+
+<label>Wallet Address</label>
+<div style="display:flex; gap:5px; align-items:center;">
+  <input 
+    value="${t.wallet||""}" 
+    onchange="updateToken('${key}','wallet',this.value)" 
+    readonly id="wallet-${key}">
+  <button type="button" 
+        class="btn lock-btn locked" 
+        style="padding:5px 10px;" 
+        onclick="toggleLock('${key}', this)">🔒</button>
+  <button type="button" class="btn" style="padding:5px 10px;" onclick="copyWallet('${key}')">📋</button>
+</div>
+
+<label>Harga Normal</label>
+<input type="number" value="${t.normal_price}" onchange="updateToken('${key}','normal_price',this.value)">
+
+<label>Harga Minimum</label>
+<input type="number" value="${t.below_min_price}" onchange="updateToken('${key}','below_min_price',this.value)">
+
+<label>Minimal Sell</label>
+<input type="number" value="${t.min_sell}" onchange="updateToken('${key}','min_sell',this.value)">
+
+`
+
+container.appendChild(div)
+
+}
+
+updateJSON()
+
+}
+
+
+
+function updateToken(token,field,value){
+
+const tokens=JSON.parse(localStorage.getItem("tokens"))
+
+if(field==="wallet"){
+
+tokens[token][field]=value
+
+}else{
+
+tokens[token][field]=parseInt(value)||0
+
+}
+
+localStorage.setItem("tokens",JSON.stringify(tokens))
+
+updateJSON()
+
+}
+
+
+
+function addCustomToken(){
+
+const name=prompt("Nama token?")
+
+if(!name)return
+
+const tokens=JSON.parse(localStorage.getItem("tokens"))
+
+if(tokens[name])return alert("Token sudah ada")
+
+tokens[name]={
+
+wallet:"",
+normal_price:0,
+below_min_price:0,
+min_sell:0
+
+}
+
+localStorage.setItem("tokens",JSON.stringify(tokens))
+
+renderTokens()
+
+}
+
+
+
+function removeToken(token){
+
+const tokens=JSON.parse(localStorage.getItem("tokens"))
+
+delete tokens[token]
+
+localStorage.setItem("tokens",JSON.stringify(tokens))
+
+renderTokens()
+
+}
+
+
+
+function saveAllSettings(){
+
+const wa=formatWA(document.getElementById("waNumber").value)
+
+localStorage.setItem("waNumber",wa)
+
+updateJSON()
+
+alert("Tersimpan")
+
+}
+
+
+
+function updateJSON(){
+
+const tokens=JSON.parse(localStorage.getItem("tokens"))
+
+const wa=localStorage.getItem("waNumber")||""
+
+const wallets={}
+
+const data={
+
+wa_number:wa,
+
+wallets:wallets
+
+}
+
+
+
+for(const key in tokens){
+
+wallets[key]=tokens[key].wallet
+
+data[key]={
+
+name:key.toUpperCase(),
+
+logo:`images/${key.toLowerCase()}.png`,
+
+normal_price:tokens[key].normal_price,
+
+below_min_price:tokens[key].below_min_price,
+
+min_sell:tokens[key].min_sell
+
+}
+
+}
+
+
+
+document.getElementById("jsonOutput").value=
+
+JSON.stringify(data,null,2)
+
+}
+
+
+
+function copyJSON() {
+    const jsonOutput = document.getElementById("jsonOutput");
+    jsonOutput.select();
+    navigator.clipboard.writeText(jsonOutput.value);
+    alert("JSON berhasil dicopy!");
+}
+
+
+function encryptToken(token) {
+    return btoa(token); // Base64 sederhana
+}
+
+function decryptToken(token) {
+    return atob(token);
+}
+
+async function uploadToGitHub() {
+    const token = document.getElementById("classicToken").value.trim();
+    if (!token) return alert("Token Klasik dibutuhkan untuk upload!");
+    localStorage.setItem("classicToken", encryptToken(token));
+
+    const githubUser = document.getElementById("githubUser").value.trim();
+    const githubRepo = document.getElementById("githubRepo").value.trim();
+    if (!githubUser || !githubRepo) return alert("Isi nama akun dan repo GitHub!");
+
+    // Ambil JSON terbaru
+    const data = document.getElementById("jsonOutput").value;
+    const path = "data/prices.json";
+    const url = `https://api.github.com/repos/${githubUser}/${githubRepo}/contents/${path}`;
+
+    // Cek apakah file sudah ada di repo untuk dapat SHA
+    let sha = null;
+    try {
+        const res = await fetch(url, { 
+            headers: { 'Authorization': 'token ' + token }
+        });
+        if (res.ok) {
+            const json = await res.json();
+            sha = json.sha; // file sudah ada, pakai SHA untuk update
+        }
+    } catch(err) {
+        console.warn("File belum ada atau error cek SHA:", err);
+    }
+
+    // Siapkan body upload
+    const body = { 
+        message: 'Update prices.json', 
+        content: btoa(unescape(encodeURIComponent(data))) // encode ke Base64
+    };
+    if (sha) body.sha = sha;
+
+    // Upload / Update
+    fetch(url, {
+        method: 'PUT',
+        headers: {
+            'Authorization': 'token ' + token,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+    })
+    .then(res => res.json())
+    .then(resData => {
+        console.log(resData);
+        alert("Upload ke GitHub berhasil!");
+    })
+    .catch(err => {
+        console.error(err);
+        alert("Upload gagal, cek console!");
+    });
+}
+
+function toggleLock(token, btn){
+    const input = document.getElementById(`wallet-${token}`);
+    input.readOnly = !input.readOnly;
+
+    if(input.readOnly){
+        btn.textContent = "🔒";
+        btn.classList.remove("unlocked");
+        btn.classList.add("locked");
+    } else {
+        btn.textContent = "🔓";
+        btn.classList.remove("locked");
+        btn.classList.add("unlocked");
+    }
+}
+
+async function uploadZipWithProgress() {
+    const token = document.getElementById("classicToken").value.trim();
+    const githubUser = document.getElementById("githubUser").value.trim();
+    const githubRepo = document.getElementById("githubRepo").value.trim();
+    const files = document.getElementById("zipFiles").files;
+
+    if(!token || !githubUser || !githubRepo) return alert("Isi semua kolom!");
+    if(!files.length) return alert("Pilih file/folder!");
+
+    const zip = new JSZip();
+    Array.from(files).forEach(file => {
+        zip.file(file.webkitRelativePath || file.name, file);
+    });
+
+    const progressWrapper = document.getElementById("progressWrapper");
+    const progressBar = document.getElementById("progressBar");
+    const progressText = document.getElementById("progressText");
+    progressWrapper.style.display = "block";
+
+    // Generate ZIP dengan progress
+    const content = await zip.generateAsync({type:"base64"}, function(metadata){
+        const percent = Math.floor(metadata.percent);
+        progressBar.style.width = percent + "%";
+        progressText.textContent = percent + "%";
+    });
+
+    // Path repo
+    const path = "uploads/files.zip";
+    const url = `https://api.github.com/repos/${githubUser}/${githubRepo}/contents/${path}`;
+
+    // Ambil SHA jika sudah ada
+    let sha = null;
+    try {
+        const res = await fetch(url, { headers: { 'Authorization': 'token ' + token }});
+        if(res.ok){ 
+            const json = await res.json(); 
+            sha = json.sha; 
+        }
+    } catch(e){ console.warn("File belum ada", e); }
+
+    const body = { message: "Upload ZIP via Admin Tool", content: content };
+    if(sha) body.sha = sha;
+
+    fetch(url, {
+        method:"PUT",
+        headers: { 'Authorization':'token ' + token, 'Content-Type':'application/json' },
+        body: JSON.stringify(body)
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        progressBar.style.width = "100%";
+        progressText.textContent = "Selesai!";
+        alert("ZIP berhasil di-upload!");
+    })
+    .catch(err=>{
+        console.error(err);
+        alert("Upload gagal, cek console!");
+    });
+}
+
+
+// ==========================
+// INIT
+// ==========================
+if(localStorage.getItem("classicToken")) {
+    document.getElementById("classicToken").value = decryptToken(localStorage.getItem("classicToken"));
+}
+
+renderTokens();
+updateJSON();
+
+</script>
+
+</body>
+</html>
