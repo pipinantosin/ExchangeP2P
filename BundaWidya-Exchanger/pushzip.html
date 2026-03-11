@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub ZIP Uploader</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+        margin:0;
+        padding:0;
+    }
+    .container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+    }
+    input[type="text"], input[type="password"], input[type="file"] {
+        width: 100%;
+        padding: 8px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+    button {
+        margin-top: 20px;
+        width: 100%;
+        padding: 10px;
+        border:none;
+        border-radius: 6px;
+        background-color: #007bff;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    button:disabled {
+        background-color: #aaa;
+        cursor: not-allowed;
+    }
+    .progress-container {
+        margin-top: 20px;
+    }
+    .progress-bar {
+        width: 100%;
+        background: #eee;
+        border-radius: 6px;
+        overflow: hidden;
+        height: 20px;
+        margin-bottom: 5px;
+    }
+    .progress-bar-inner {
+        height: 100%;
+        width: 0;
+        background: #28a745;
+        text-align: center;
+        color: white;
+        line-height: 20px;
+        font-size: 12px;
+        transition: width 0.2s;
+    }
+    .status {
+        font-size: 14px;
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>GitHub ZIP Uploader</h1>
+    
+    <label for="username">GitHub Username</label>
+    <input type="text" id="username" placeholder="Username">
+    
+    <label for="repo">Repository Name</label>
+    <input type="text" id="repo" placeholder="Repo Name">
+    
+    <label for="token">GitHub Classic Token</label>
+    <input type="password" id="token" placeholder="Token">
+    
+    <label for="files">Pilih File / Folder</label>
+    <input type="file" id="files" webkitdirectory multiple>
+    
+    <button id="uploadBtn">Generate & Upload ZIP</button>
+    
+    <div class="progress-container">
+        <div class="progress-bar"><div class="progress-bar-inner" id="zipProgress">0%</div></div>
+        <div class="progress-bar"><div class="progress-bar-inner" id="uploadProgress">0%</div></div>
+        <div class="status" id="statusText"></div>
+    </div>
+</div>
+
+<!-- JSZip CDN -->
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script>
+(async function() {
+
+    const usernameInput = document.getElementById('username');
+    const repoInput = document.getElementById('repo');
+    const tokenInput = document.getElementById('token');
+    const filesInput = document.getElementById('files');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const zipProgressBar = document.getElementById('zipProgress');
+    const uploadProgressBar = document.getElementById('uploadProgress');
+    const statusText = document.getElementById('statusText');
+
+    // ======= Load saved data =======
+    function loadSaved() {
+        usernameInput.value = localStorage.getItem('gh_username') || '';
+        repoInput.value = localStorage.getItem('gh_repo') || '';
+        const savedToken = localStorage.getItem('gh_token');
+        tokenInput.value = savedToken ? atob(savedToken) : '';
+    }
+    loadSaved();
+
+    // ======= Save data =======
+    function saveData() {
+        localStorage.setItem('gh_username', usernameInput.value.trim());
+        localStorage.setItem('gh_repo', repoInput.value.trim());
+        if(tokenInput.value.trim()) {
+            localStorage.setItem('gh_token', btoa(tokenInput.value.trim()));
+        }
+    }
+
+    // ======= Helper: Sleep =======
+    function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+    // ======= Generate ZIP =======
+    async function generateZip(files) {
+        if(!window.JSZip) throw new Error("JSZip belum load!");
+        const zip = new JSZip();
+        let count = 0;
+        const total = files.length;
+        const startTime = Date.now();
+
+        for(const file of files) {
+            const relativePath = file.webkitRelativePath || file.name;
+            zip.file(relativePath, file);
+            count++;
+            const percent = Math.floor((count/total)*100);
+            zipProgressBar.style.width = percent+'%';
+            zipProgressBar.textContent = percent+'%';
+
+            // Estimasi waktu
+            const elapsed = (Date.now() - startTime)/1000;
+            const estTotal = (elapsed/count)*total;
+            const estRemain = Math.max(0, estTotal - elapsed);
+            statusText.textContent = `Membuat ZIP... sisa ~${Math.round(estRemain)} detik`;
+            await sleep(10); // agar UI update
+        }
+
+        const blob = await zip.generateAsync({type:"blob"}, metadata => {
+            const percent = Math.floor(metadata.percent);
+            zipProgressBar.style.width = percent+'%';
+            zipProgressBar.textContent = percent+'%';
+            statusText.textContent = `Membuat ZIP... sisa ~${Math.round((metadata.percent/100)*(total-count))} detik`;
+        });
+        zipProgressBar.style.width = '100%';
+        zipProgressBar.textContent = '100%';
+        return blob;
+    }
+
+    // ======= Upload to GitHub =======
+    async function uploadToGitHub(blob) {
+        const username = usernameInput.value.trim();
+        const repo = repoInput.value.trim();
+        const token = tokenInput.value.trim();
+
+        if(!username || !repo || !token) {
+            alert("Username, Repo, atau Token kosong!");
+            return;
+        }
+
+        const path = "uploads/files.zip";
+        const url = `https://api.github.com/repos/${username}/${repo}/contents/${path}`;
+
+        // Check if file exists to get SHA
+        let sha = null;
+        try {
+            const res = await fetch(url, {
+                headers: { 'Authorization': 'token ' + token }
+            });
+            if(res.ok) {
+                const data = await res.json();
+                sha = data.sha;
+            }
+        } catch(e){
+            console.warn("File check error:", e);
+        }
+
+        const base64Data = await blobToBase64(blob);
+        const body = {
+            message: `Upload files.zip`,
+            content: base64Data
+        };
+        if(sha) body.sha = sha;
+
+        statusText.textContent = "Uploading to GitHub...";
+        uploadProgressBar.style.width = '0%';
+        uploadProgressBar.textContent = '0%';
+
+        try {
+            const res = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'token ' + token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+            if(res.ok) {
+                uploadProgressBar.style.width = '100%';
+                uploadProgressBar.textContent = '100%';
+                statusText.textContent = "Upload selesai!";
+                alert("ZIP berhasil di-upload ke GitHub!");
+            } else {
+                const err = await res.json();
+                console.error(err);
+                alert("Upload gagal: " + (err.message || res.statusText));
+            }
+        } catch(e) {
+            console.error(e);
+            alert("Upload gagal: " + e.message);
+        }
+    }
+
+    function blobToBase64(blob) {
+        return new Promise((resolve, reject)=>{
+            const reader = new FileReader();
+            reader.onload = ()=> resolve(reader.result.split(',')[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    }
+
+    // ======= Button Click =======
+    uploadBtn.addEventListener('click', async ()=>{
+        saveData();
+
+        const files = filesInput.files;
+        if(!files.length) {
+            alert("Pilih file atau folder terlebih dahulu!");
+            return;
+        }
+
+        uploadBtn.disabled = true;
+        try {
+            const zipBlob = await generateZip(files);
+            await uploadToGitHub(zipBlob);
+        } catch(e){
+            alert("Terjadi error: " + e.message);
+            console.error(e);
+        } finally {
+            uploadBtn.disabled = false;
+        }
+    });
+
+})();
+</script>
+</body>
+</html>
