@@ -108,6 +108,21 @@ verifyBtn.addEventListener("click", async () => {
     // verifikasi transaksi blockchain
     const tx = await verifyTxFull(txHash);
     window.VERIFIED_TX = tx;
+    
+    const token = document.getElementById("sellToken").value;
+const price = getTokenPrice(token, tx.value); // ambil harga token
+const receive = tx.value * price;
+
+document.getElementById("previewSend").innerText = tx.value + " " + token.toUpperCase();
+document.getElementById("previewReceive").innerText = "Rp " + receive.toLocaleString("id-ID");
+document.getElementById("previewWallet").innerText = tx.from;
+
+const accounts = JSON.parse(localStorage.getItem("bw_accounts")) || [];
+const selected = localStorage.getItem("bw_selected");
+const account = accounts.find(a => a.id == selected) || {};
+
+document.getElementById("previewPayment").innerText =
+  (account.bank || "-") + " • " + (account.number || "-");
 
     verifyMessage.innerText = "Transaksi valid ✅";
     verifyMessage.style.color = "green";
