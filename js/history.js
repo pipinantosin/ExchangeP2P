@@ -147,7 +147,7 @@ function initHistoryPanel(){
     const panel = document.querySelector(".history-panel");
     const closeBtn = document.querySelector(".history-header .closeHistory");
     if(!btn || !panel) return;
-    btn.addEventListener("click",()=>panel.classList.add("open"));
+    btn.addEventListener("click",openHistoryPanel);
     if(closeBtn) closeBtn.addEventListener("click",()=>panel.classList.remove("open"));
 }
 
@@ -155,4 +155,111 @@ function initHistoryPanel(){
 document.addEventListener("DOMContentLoaded",()=>{
     renderHistory();
     initHistoryPanel();
+});
+
+// ===============================
+// BACK BUTTON MOBILE SUPPORT
+// ===============================
+
+function openHistoryPanel(){
+const panel = document.querySelector(".history-panel");
+if(!panel) return;
+
+panel.classList.add("open");
+
+history.pushState(
+{historyPanel:true},
+"",
+"#history"
+);
+}
+
+function closeHistoryPanel(){
+
+const panel = document.querySelector(".history-panel");
+const overlay = document.querySelector(".history-overlay");
+
+panel?.classList.remove("open");
+overlay?.classList.remove("show");
+
+}
+
+window.addEventListener("popstate",(event)=>{
+
+const panel = document.querySelector(".history-panel");
+
+if(panel && panel.classList.contains("open")){
+panel.classList.remove("open");
+}
+
+});
+
+// ===============================
+// HISTORY PANEL MOBILE UX
+// ===============================
+
+const panel = document.querySelector(".history-panel");
+const overlay = document.querySelector(".history-overlay");
+const openBtn = document.getElementById("openHistory");
+const closeBtn = document.querySelector(".closeHistory");
+
+function openHistoryPanel(){
+
+panel.classList.add("open");
+overlay.classList.add("show");
+
+history.pushState({history:true},"","#history");
+
+}
+
+function closeHistoryPanel(){
+
+panel.classList.remove("open");
+overlay.classList.remove("show");
+
+}
+
+openBtn?.addEventListener("click",openHistoryPanel);
+
+closeBtn?.addEventListener("click",closeHistoryPanel);
+
+overlay?.addEventListener("click",closeHistoryPanel);
+
+
+// ===============================
+// BACK BUTTON ANDROID
+// ===============================
+
+window.addEventListener("popstate", () => {
+
+const panel = document.querySelector(".history-panel");
+
+if(panel && panel.classList.contains("open")){
+closeHistoryPanel();
+}
+
+});
+
+// ===============================
+// SWIPE CLOSE
+// ===============================
+
+let startX=0;
+
+panel.addEventListener("touchstart",(e)=>{
+
+startX=e.touches[0].clientX;
+
+});
+
+panel.addEventListener("touchmove",(e)=>{
+
+let moveX=e.touches[0].clientX;
+
+if(moveX-startX>80){
+
+closeHistoryPanel();
+
+}
+
 });
