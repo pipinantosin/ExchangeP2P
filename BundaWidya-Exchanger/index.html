@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Bundawidya Exchanger</title>
+
+<link rel="stylesheet" href="css/header.css">
+<link rel="stylesheet" href="css/price-ticker.css">
+<link rel="stylesheet" href="css/step-bar.css">
+<link rel="stylesheet" href="css/info.css">
+<link rel="stylesheet" href="css/trust-bar.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/modal.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/history-panel.css">
+<link rel="stylesheet" href="css/toast.css">
+<link rel="stylesheet" href="css/all.min.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+
+
+<!-- ======================
+HEADER PREMIUM BW
+====================== -->
+
+<header class="topbar">
+
+<div class="left-menu">
+
+<button id="openAccount" class="icon-btn">
+<i class="fa-solid fa-wallet"></i>
+</button>
+
+<button id="openSettings" class="icon-btn">
+<i class="fa-solid fa-gear"></i>
+</button>
+
+</div>
+
+
+<div class="logo">
+
+<img src="images/bunda-widya.jpg" class="logo-avatar">
+
+<div class="logo-text">
+
+<span class="logo-title">BUNDA WIDYA EXCHANGER</span>
+
+<span class="logo-sub">
+Crypto Swap
+<span class="market-live">LIVE</span>
+</span>
+
+</div>
+
+</div>
+
+<div class="right-menu">
+
+<button id="openHistory" type="button" class="icon-btn">
+<i class="fa-solid fa-clock"></i>
+<span id="historyBadge" class="badge">0</span>
+</button>
+
+<a href="https://t.me/PiNetwork_SIDRABANK" 
+   target="_blank" 
+   class="icon-btn telegram-btn">
+
+<i class="fa-brands fa-telegram"></i>
+
+</a>
+
+</div>
+
+</header>
+
+<div class="history-overlay"></div>
+
+<div class="history-panel">
+
+<div class="history-header">
+<h3><i class="fa-solid fa-clock"></i> Riwayat Transaksi</h3>
+
+<button class="closeHistory">
+<i class="fa-solid fa-xmark"></i>
+</button>
+
+</div>
+
+<div id="history"></div>
+
+</div>
+<!-- ======================
+HISTORY PANEL
+====================== -->
+
+<div class="history-panel">
+
+<div class="history-header">
+<h3>Riwayat Transaksi</h3>
+
+<button class="closeHistory">
+<i class="fa-solid fa-xmark"></i>
+</button>
+
+</div>
+
+<div id="history"></div>
+
+</div>
+
+
+<main class="dashboard">
+	
+<!-- ======================
+PRICE TICKER
+====================== -->
+
+<div class="ticker">
+    <div class="ticker-track" id="tickerTrack"></div>
+    <div class="ticker-note">
+Harga dapat berubah sewaktu-waktu sesuai market
+<span class="market-status live">LIVE</span>
+</div>
+</div>
+
+<div class="info-chips">
+<span class="info-chip">INFO</span>
+
+<button class="chip" onclick="openInfo('scam')">
+<i class="fa-solid fa-shield-halved"></i> Anti Scam
+</button>
+
+<button class="chip" onclick="openInfo('wallet')">
+<i class="fa-solid fa-wallet"></i> Wallet
+</button>
+
+<button class="chip" onclick="openInfo('contact')">
+<i class="fa-solid fa-phone"></i> Kontak
+</button>
+
+<button class="chip" onclick="openInfo('guide')">
+<i class="fa-solid fa-book-open"></i> Cara
+</button>
+
+</div>
+
+<div class="trust-bar">
+
+<div class="trust-item">
+<i class="fa-solid fa-shield-halved"></i>
+<span>Anti Scam</span>
+</div>
+
+<div class="trust-item">
+<i class="fa-solid fa-clock"></i>
+<span>Fast Process</span>
+</div>
+
+<div class="trust-item">
+<i class="fa-solid fa-wallet"></i>
+<span>Verified Wallet</span>
+</div>
+
+<div class="trust-item">
+<i class="fa-brands fa-whatsapp"></i>
+<span>24h Support</span>
+</div>
+
+</div>
+<!-- ======================
+SELL TOKEN
+====================== -->
+
+<!-- STEP INDICATOR -->
+	<section class="card workflow">
+<div class="step-bar">
+  <div class="step active" id="step1">① Input Token →</div>
+  <div class="step" id="step2">② Generate Link →</div>
+  <div class="step" id="step3">③ Verify Hash →</div>
+  <div class="step" id="step4">④ Konfirmasi Order</div>
+</div>
+</section>
+
+<!-- INPUT TOKEN & AMOUNT -->
+<section class="card">
+  <h2><i class="fa-solid fa-arrow-down"></i> Jual Token</h2>
+
+  <div class="token-input">
+    <input type="number" id="sellAmount" placeholder="Jumlah Token">
+
+    <div class="token-select">
+      <img id="tokenLogo" src="images/sidra.png" alt="Token Logo">
+      <select id="sellToken">
+        <!-- options akan diisi JS -->
+      </select>
+    </div>
+  </div>
+
+  <div class="rupiah-preview">
+    <span>Estimasi diterima</span>
+    <div id="rupiahPreview">Rp 0</div>
+  </div>
+
+  <button id="generateBtn" disabled>Membuat Transaksi</button>
+</section>
+
+<!-- ======================
+LINK & QR + VERIFY + LEDGER
+====================== -->
+<section class="card" id="linkSection" style="display:none;">
+
+  <h3><i class="fa-solid fa-link"></i> Link Transaksi</h3>
+
+  <!-- Tombol link transaksi -->
+  <a id="generatedLink" href="#" target="_blank" class="btn-link">
+    Kirim Token ke Wallet Exchanger
+  </a>
+
+  <!-- QR Code -->
+  <div id="qrcode" style="margin-top:10px;"></div>
+
+ <!-- Keterangan untuk input hash -->
+<p style="margin-top:12px; font-size:14px; color:#555;">
+Klik link di atas, lalu konfirmasi dan salin alamat hash transaksi yang muncul.
+</p>
+
+
+
+  <!-- Input hash di atas tombol -->
+  <div class="hash-verify-group" style="margin-top:6px; flex-direction:column; gap:6px;">
+    <input id="txHashInput" placeholder="Paste hash transaksi" disabled>
+    <button id="verifyTxBtn" disabled>Verify Hash</button>
+  </div>
+
+  <div id="verifyMessage" style="margin-top:6px;font-weight:600;"></div>
+
+  <!-- CARD VERIFIKASI -->
+  <div class="ledger-card" id="txVerifyCard" style="display:none;">
+
+    <h3>Detail Transaksi</h3>
+
+    <div class="tx-detail-row"><span>Hash:</span> <span id="txHashDetail"></span></div>
+    <div class="tx-detail-row"><span>Status:</span> <span id="txStatusDetail"></span></div>
+    <div class="tx-detail-row"><span>Terkirim Kepada:</span> <span id="txToDetail"></span></div>
+    <div class="tx-detail-row"><span>Jumlah:</span> 
+      <span id="txAmountDetail">
+        <img src="images/sidra.png" style="height:18px;vertical-align:middle;margin-right:4px;">
+        <span id="txAmountValue"></span>
+      </span>
+    </div>
+    <div class="tx-detail-row"><span>Biaya Transaksi:</span> <span id="txFeeDetail"></span></div>
+    <div class="tx-detail-row"><span>Gas Digunakan:</span> <span id="txGasUsed"></span></div>
+    <div class="tx-detail-row"><span>Batas Gas:</span> <span id="txGasLimit"></span></div>
+    <div class="tx-detail-row"><span>Harga Gas:</span> <span id="txGasPrice"></span></div>
+    <div class="tx-detail-row"><span>Blok:</span> <span id="txBlock"></span></div>
+    <div class="tx-detail-row"><span>Nonce:</span> <span id="txNonce"></span></div>
+    <div class="tx-detail-row"><span>Konfirmasi:</span> <span id="txConfirmations"></span></div>
+    <div class="tx-detail-row"><span>Tanggal:</span> <span id="txDate"></span></div>
+
+  </div>
+
+<p id="confirmText" style="display:none;margin-top:8px;font-size:14px;color:#555;">
+Silakan kirim konfirmasi transaksi ke admin untuk diproses.
+</p>
+  <!-- Tombol WA sementara -->
+  <button id="sendVerifiedWA" style="display:none; margin-top:10px;">
+  <i class="fa-brands fa-whatsapp"></i>Kirim Order ke Bunda Widya
+</button>
+
+</section>
+
+
+<!-- ======================
+PREVIEW
+====================== -->
+
+<div class="tx-preview">
+
+<div class="tx-box">
+<div class="tx-label">
+<i class="fa-solid fa-paper-plane"></i> YOU SEND
+</div>
+<div id="previewSend" class="tx-value">-</div>
+</div>
+
+<div class="tx-box">
+
+<div class="tx-label">YOU RECEIVE</div>
+<div id="previewReceive" class="tx-value">Rp 0</div>
+
+</div>
+
+<div class="tx-box">
+
+<div class="tx-label">PAYMENT</div>
+<div id="previewPayment" class="tx-value">-</div>
+
+</div>
+
+<div class="tx-box">
+
+<div class="tx-label">DESTINATION</div>
+<div id="previewWallet" class="tx-value"><button class="copy-btn">
+<i class="fa-regular fa-copy"></i>
+</button>-</div>
+
+</div>
+
+</div>
+
+
+
+</main>
+
+
+<!-- ======================
+FOOTER
+====================== -->
+
+<footer>
+
+<p>© Bundawidya Exchanger</p>
+
+</footer>
+
+
+
+<!-- ======================
+ACCOUNT MODAL
+====================== -->
+
+<div id="accountModal" class="modal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h3>Pengaturan Akun Bank</h3>
+</div>
+
+<div class="modal-body">
+
+<input id="userName" placeholder="Nama (Sesuai Akun Bank / Ewallet)">
+
+
+<label>Metode Pembayaran</label>
+
+<!-- SELECT ASLI UNTUK JS -->
+<select id="paymentSelect" style="display:none"></select>
+
+
+<!-- CUSTOM DROPDOWN -->
+<div class="bank-select" id="bankSelect">
+
+<div class="bank-selected" id="selectedBank">
+
+<img id="selectedBankLogo" src="" style="display:none">
+<span id="selectedBankName">Pilih Bank / E-Wallet</span>
+
+<i class="fa-solid fa-chevron-down"></i>
+
+</div>
+
+<div class="bank-options" id="bankOptions"></div>
+
+</div>
+
+
+<!-- logo lama bisa disembunyikan -->
+<div id="paymentLogo" style="display:none"></div>
+
+
+<input id="accountNumber" placeholder="Nomor rekening / ewallet">
+
+
+<button id="addAccount" class="btn-add">
++ Tambah Rekening
+</button>
+
+
+<!-- LIST AKUN -->
+<div id="accountList"></div>
+
+
+<label>Wallet Sidra (SDA)</label>
+<input id="sidraWallet" placeholder="Contoh: 0x...">
+
+
+<label>Wallet Pi</label>
+<input id="piWallet" placeholder="Contoh: GABCD1234XYZ5678...">
+
+</div>
+
+
+<div class="modal-footer">
+
+<button id="saveAccount" class="btn-save">
+Simpan Pengaturan
+</button>
+
+</div>
+
+</div>
+</div>
+
+<!-- ======================
+SETTING MODAL
+====================== -->
+
+<div id="settingsModal" class="modal">
+
+<div class="modal-box">
+
+<div class="modal-header">
+<h3>Pengaturan</h3>
+</div>
+
+<div class="modal-body">
+
+<label>Mode Dashboard</label>
+
+<select id="modeSelect">
+<option value="sell">Jual Token</option>
+<option value="buy">Beli Token</option>
+</select>
+
+<label>Dark Mode</label>
+
+<div class="setting-item">
+
+<label class="toggle-row">
+  <span>Dark Mode</span>
+  <label class="switch">
+    <input type="checkbox" id="darkToggle">
+    <span class="slider"></span>
+  </label>
+</label>
+
+</div>
+<button id="clearStorageBtn" style="
+padding:10px 16px;
+background:#e53935;
+color:white;
+border:none;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
+">
+🧹 Bersihkan Data Storage
+</button>
+</div>
+
+</div>
+</div>
+
+<div id="infoModal" class="modal-info">
+
+<div class="modal-content">
+
+<button class="close-info" onclick="closeInfo()">✕</button>
+
+<div id="infoContent"></div>
+
+</div>
+
+</div>
+<!-- ======================
+SCRIPT
+====================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="js/config.js"></script>
+<script src="js/alur-transaksi.js"></script>
+<script src="js/blockchain.js"></script>
+
+<script src="js/history.js"></script>
+
+<script src="js/app.js"></script>
+<script src="js/account.js"></script>
+<script src="js/user.js"></script>
+<script src="js/price.js"></script>
+<script src="js/wa.js"></script>
+<script src="js/exchanger.js"></script>
+<script src="js/qr.js"></script>
+<script src="js/toast.js"></script>
+
+
+
+<script>
+const track = document.getElementById("tickerTrack");
+
+track.innerHTML = track.innerHTML + track.innerHTML;
+
+
+
+
+
+
+
+
+
+
+
+function openInfo(type){
+
+const modal=document.getElementById("infoModal");
+const content=document.getElementById("infoContent");
+
+modal.style.display="flex";
+
+if(type==="scam"){
+
+content.innerHTML=`
+
+<h3>⚠ Peringatan Penipuan</h3>
+
+<ul>
+<li>Admin tidak pernah DM duluan</li>
+<li>Akun resmi hanya @Victory_Pi</li>
+<li>Harga mengikuti group</li>
+</ul>
+
+`;
+
+}
+
+if(type==="wallet"){
+
+content.innerHTML=`
+
+<h3>💰 Wallet Resmi</h3>
+
+<p><b>Sidra</b></p>
+<p>0x27ef357B488D8CE3DC4f07F0Ea41AA502d94E357</p>
+
+<p><b>Pi</b></p>
+<p>MDFNWH6ZFJVHJDLBMNOUT35X4EEKQVJA...</p>
+
+`;
+
+}
+
+if(type==="contact"){
+
+content.innerHTML=`
+
+<h3>📞 Kontak Resmi</h3>
+
+<p>WhatsApp : +6282267777834</p>
+
+<p>Telegram : @Victory_Pi</p>
+
+<p>Facebook : Alexandria Pi Network</p>
+
+`;
+
+}
+
+if(type==="guide"){
+
+content.innerHTML=`
+
+<h3>📖 Cara Transaksi</h3>
+
+<ol>
+<li>Input token</li>
+<li>Kirim token</li>
+<li>Salin hash</li>
+<li>Verify hash</li>
+<li>Kirim order</li>
+</ol>
+
+`;
+
+}
+
+}
+
+function closeInfo(){
+
+document.getElementById("infoModal").style.display="none";
+
+}
+
+
+</script>
+
+
+</body>
+</html>
