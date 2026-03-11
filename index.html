@@ -8,8 +8,11 @@
 
 <title>Bundawidya Exchanger</title>
 
-<link rel="stylesheet" href="css/step-bar.css">
+<link rel="stylesheet" href="css/header.css">
 <link rel="stylesheet" href="css/price-ticker.css">
+<link rel="stylesheet" href="css/step-bar.css">
+<link rel="stylesheet" href="css/info.css">
+<link rel="stylesheet" href="css/trust-bar.css">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/modal.css">
 <link rel="stylesheet" href="css/dashboard.css">
@@ -26,18 +29,18 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 
 <!-- ======================
-HEADER
+HEADER PREMIUM BW
 ====================== -->
 
 <header class="topbar">
 
 <div class="left-menu">
 
-<button id="openAccount">
+<button id="openAccount" class="icon-btn">
 <i class="fa-solid fa-wallet"></i>
 </button>
 
-<button id="openSettings">
+<button id="openSettings" class="icon-btn">
 <i class="fa-solid fa-gear"></i>
 </button>
 
@@ -45,32 +48,68 @@ HEADER
 
 
 <div class="logo">
-<i class="fa-solid fa-coins"></i>
-<span>BW EXCHANGER</span>
+
+<img src="images/bunda-widya.jpg" class="logo-avatar">
+
+<div class="logo-text">
+
+<span class="logo-title">BUNDA WIDYA EXCHANGER</span>
+
+<span class="logo-sub">
+Crypto Swap
+<span class="market-live">LIVE</span>
+</span>
+
 </div>
 
+</div>
 
 <div class="right-menu">
 
-<button id="openHistory" type="button">
+<button id="openHistory" type="button" class="icon-btn">
 <i class="fa-solid fa-clock"></i>
 <span id="historyBadge" class="badge">0</span>
 </button>
 
-<button id="darkToggle" type="button">
-<i class="fa-solid fa-moon"></i>
-</button>
+<a href="https://t.me/PiNetwork_SIDRABANK" 
+   target="_blank" 
+   class="icon-btn telegram-btn">
+
+<i class="fa-brands fa-telegram"></i>
+
+</a>
 
 </div>
 
 </header>
+
+<div class="history-overlay"></div>
+
+<div class="history-panel">
+
+<div class="history-header">
+<h3><i class="fa-solid fa-clock"></i> Riwayat Transaksi</h3>
+
+<button class="closeHistory">
+<i class="fa-solid fa-xmark"></i>
+</button>
+
+</div>
+
+<div id="history"></div>
+
+</div>
+<!-- ======================
+HISTORY PANEL
+====================== -->
+
 <div class="history-panel">
 
 <div class="history-header">
 <h3>Riwayat Transaksi</h3>
 
-<button onclick="document.querySelector('.history-panel').classList.remove('open')">
-✕
+<button class="closeHistory">
+<i class="fa-solid fa-xmark"></i>
 </button>
 
 </div>
@@ -81,8 +120,7 @@ HEADER
 
 
 <main class="dashboard">
-
-
+	
 <!-- ======================
 PRICE TICKER
 ====================== -->
@@ -95,18 +133,63 @@ Harga dapat berubah sewaktu-waktu sesuai market
 </div>
 </div>
 
+<div class="info-chips">
+<span class="info-chip">INFO</span>
+
+<button class="chip" onclick="openInfo('scam')">
+<i class="fa-solid fa-shield-halved"></i> Anti Scam
+</button>
+
+<button class="chip" onclick="openInfo('wallet')">
+<i class="fa-solid fa-wallet"></i> Wallet
+</button>
+
+<button class="chip" onclick="openInfo('contact')">
+<i class="fa-solid fa-phone"></i> Kontak
+</button>
+
+<button class="chip" onclick="openInfo('guide')">
+<i class="fa-solid fa-book-open"></i> Cara
+</button>
+
+</div>
+
+<div class="trust-bar">
+
+<div class="trust-item">
+<i class="fa-solid fa-shield-halved"></i>
+<span>Anti Scam</span>
+</div>
+
+<div class="trust-item">
+<i class="fa-solid fa-clock"></i>
+<span>Fast Process</span>
+</div>
+
+<div class="trust-item">
+<i class="fa-solid fa-wallet"></i>
+<span>Verified Wallet</span>
+</div>
+
+<div class="trust-item">
+<i class="fa-brands fa-whatsapp"></i>
+<span>24h Support</span>
+</div>
+
+</div>
 <!-- ======================
 SELL TOKEN
 ====================== -->
 
 <!-- STEP INDICATOR -->
+	<section class="card workflow">
 <div class="step-bar">
   <div class="step active" id="step1">① Input Token →</div>
   <div class="step" id="step2">② Generate Link →</div>
   <div class="step" id="step3">③ Verify Hash →</div>
   <div class="step" id="step4">④ Konfirmasi Order</div>
 </div>
-
+</section>
 
 <!-- INPUT TOKEN & AMOUNT -->
 <section class="card">
@@ -352,10 +435,17 @@ SETTING MODAL
 
 <label>Dark Mode</label>
 
-<select id="darkMode">
-<option value="on">ON</option>
-<option value="off">OFF</option>
-</select>
+<div class="setting-item">
+
+<label class="toggle-row">
+  <span>Dark Mode</span>
+  <label class="switch">
+    <input type="checkbox" id="darkToggle">
+    <span class="slider"></span>
+  </label>
+</label>
+
+</div>
 <button id="clearStorageBtn" style="
 padding:10px 16px;
 background:#e53935;
@@ -372,6 +462,17 @@ cursor:pointer;
 </div>
 </div>
 
+<div id="infoModal" class="modal-info">
+
+<div class="modal-content">
+
+<button class="close-info" onclick="closeInfo()">✕</button>
+
+<div id="infoContent"></div>
+
+</div>
+
+</div>
 <!-- ======================
 SCRIPT
 ====================== -->
@@ -380,7 +481,7 @@ SCRIPT
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script src="js/config.js"></script>
-
+<script src="js/alur-transaksi.js"></script>
 <script src="js/blockchain.js"></script>
 
 <script src="js/history.js"></script>
@@ -397,348 +498,102 @@ SCRIPT
 
 
 <script>
+const track = document.getElementById("tickerTrack");
 
-// ===============================
-// HELPER
-// ===============================
-
-function formatDate(ts){
-return new Date(ts*1000).toLocaleString(
-"id-ID",
-{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}
-);
-}
+track.innerHTML = track.innerHTML + track.innerHTML;
 
 
-// ===============================
-// STEP 1
-// ===============================
-
-const sellAmountInput = document.getElementById("sellAmount");
-const generateBtn = document.getElementById("generateBtn");
-const step1 = document.getElementById("step1");
-const step2 = document.getElementById("step2");
-
-sellAmountInput.addEventListener("input",()=>{
-
-const amount = parseFloat(sellAmountInput.value);
-
-if(amount && amount>0){
-
-generateBtn.disabled=false;
-step1.classList.add("active");
-
-}else{
-
-generateBtn.disabled=true;
-step1.classList.remove("active");
-
-}
-
-});
-
-generateBtn.addEventListener("click",()=>{
-step2.classList.add("active");
-});
 
 
-// ===============================
-// GENERATE LINK
-// ===============================
 
-const generatedLinkEl = document.getElementById("generatedLink");
-const linkSection = document.getElementById("linkSection");
-const txHashInput = document.getElementById("txHashInput");
-const verifyBtn = document.getElementById("verifyTxBtn");
-const step3 = document.getElementById("step3");
 
-generateBtn.addEventListener("click",()=>{
 
-const token = document.getElementById("sellToken").value;
-const amount = parseFloat(sellAmountInput.value);
 
-const sidraWallet =
-window.APP_CONFIG?.WALLETS?.SIDRA ||
-"0xD18bCb2C5dD29cDf00Fd8c6a0F63158FE644A8a7";
 
-const link =
-`https://www.sidrachain.com/wallets/send?to=${sidraWallet}&amount=${amount}&currency=SDA`;
 
-generatedLinkEl.href = link;
 
-linkSection.style.display="block";
+function openInfo(type){
 
-if(typeof QRCode==="function"){
+const modal=document.getElementById("infoModal");
+const content=document.getElementById("infoContent");
 
-document.getElementById("qrcode").innerHTML="";
+modal.style.display="flex";
 
-new QRCode(document.getElementById("qrcode"),{
-text:link,
-width:150,
-height:150
-});
+if(type==="scam"){
+
+content.innerHTML=`
+
+<h3>⚠ Peringatan Penipuan</h3>
+
+<ul>
+<li>Admin tidak pernah DM duluan</li>
+<li>Akun resmi hanya @Victory_Pi</li>
+<li>Harga mengikuti group</li>
+</ul>
+
+`;
 
 }
 
-});
+if(type==="wallet"){
 
+content.innerHTML=`
 
-// ===============================
-// LINK CLICK → ENABLE VERIFY
-// ===============================
+<h3>💰 Wallet Resmi</h3>
 
-generatedLinkEl.addEventListener("click",()=>{
+<p><b>Sidra</b></p>
+<p>0x27ef357B488D8CE3DC4f07F0Ea41AA502d94E357</p>
 
-txHashInput.disabled=false;
-verifyBtn.disabled=false;
-step3.classList.add("active");
+<p><b>Pi</b></p>
+<p>MDFNWH6ZFJVHJDLBMNOUT35X4EEKQVJA...</p>
 
-});
-
-// ===============================
-// VERIFY HASH + HISTORY + WA FINAL
-// ===============================
-
-// SIMPAN USER SEKALI SAJA
-const USER = JSON.parse(localStorage.getItem("bw_user") || "{}");
-
-verifyBtn.addEventListener("click", async () => {
-
-    const txHash = txHashInput.value.trim();
-    const verifyMessage = document.getElementById("verifyMessage");
-    const sendWAButton = document.getElementById("sendVerifiedWA");
-
-    if (!txHash) return alert("Masukkan hash transaksi");
-
-    verifyMessage.innerText = "Memverifikasi...";
-    verifyMessage.style.color = "black";
-
-    try {
-
-        // VERIFY BLOCKCHAIN
-        const tx = await verifyTxFull(txHash);
-        window.VERIFIED_TX = tx;
-
-        const token = document.getElementById("sellToken").value;
-
-        // ===============================
-        // LOAD SELECTED ACCOUNT
-        // ===============================
-
-        const accounts =
-            JSON.parse(localStorage.getItem("bw_accounts")) || [];
-
-        const selected =
-            localStorage.getItem("bw_selected");
-
-        const account =
-            accounts.find(a => a.id == selected) || {};
-
-        // HITUNG TOTAL
-        const price = getTokenPrice(token, tx.value);
-        const receive = tx.value * price;
-
-        // UPDATE PREVIEW
-        if (previewSend) previewSend.innerText = tx.value + " " + token.toUpperCase();
-        if (previewReceive) previewReceive.innerText = "Rp " + receive.toLocaleString("id-ID");
-        if (previewWallet) previewWallet.innerText = tx.from;
-
-        if (previewPayment) {
-            previewPayment.innerText =
-                (account.bank || "-") +
-                " • " +
-                (account.number || "-");
-        }
-
-        // -------- TRANSAKSI VALID --------
-        verifyMessage.innerText = "Transaksi valid ✅";
-       verifyMessage.style.color = "green";
-
-      document.getElementById("confirmText").style.display = "block";
-      sendWAButton.style.display = "block";
-        // ===============================
-        // SIMPAN HISTORY SEKALI PER HASH
-        // ===============================
-
-        let existingHistory = getHistory().find(h => h.hash === tx.hash);
-        let orderID;
-
-        if (existingHistory) {
-
-            orderID = existingHistory.id;
-
-        } else {
-
-            orderID = "BW-" + tx.hash.slice(2, 8).toUpperCase();
-
-            addHistory({
-                id: orderID,
-                hash: tx.hash,
-                from: tx.from,
-                token: token.toUpperCase(),
-                amount: tx.value,
-                total: receive,
-                status: "valid",
-                date: Date.now(),
-                accountPayment: account.bank || "-",
-                accountNumber: account.number || "-",
-                accountName: JSON.parse(localStorage.getItem("bw_user")||"{}").name || "-"
-            });
-
-        }
-
-        window.VERIFIED_TX_ID = orderID;
-
-        // ===============================
-        // TOMBOL WA USER FRIENDLY
-        // ===============================
-
-        sendWAButton.style.display = "block";
-        sendWAButton.innerHTML =
-            `<i class="fa-solid fa-paper-plane"></i> Kirim ke Bunda Widya`;
-
-        sendWAButton.onclick = () => {
-
-    // ===============================
-    // CEK DATA REKENING USER
-    // ===============================
-
-    const accounts =
-        JSON.parse(localStorage.getItem("bw_accounts")) || [];
-
-    const selected =
-        localStorage.getItem("bw_selected");
-
-    const account =
-        accounts.find(a => a.id == selected);
-
-    // ===============================
-    // BLOK WA JIKA REKENING BELUM ADA
-    // ===============================
-
-    if(!account){
-
-        alert("⚠️ Isi rekening pembayaran dulu di tombol DOMPET");
-
-        document.getElementById("accountModal").style.display = "flex";
-
-        return; // stop supaya WA tidak jalan
-    }
-
-    // ===============================
-    // CONFIG WA
-    // ===============================
-
-    const waNumber =
-        window.APP_CONFIG?.WHATSAPP?.DEFAULT || "6200000000000";
-
-    const receiverWallet =
-        (token === "sidra")
-        ? window.APP_CONFIG?.WALLETS?.SIDRA || "-"
-        : window.APP_CONFIG?.WALLETS?.PI || "-";
-
-    const user =
-        JSON.parse(localStorage.getItem("bw_user") || "{}");
-
-    // ===============================
-    // TEMPLATE WA
-    // ===============================
-
-    const text = `🟢 BW EXCHANGER VERIFIED
-
-🔹 ID Transaksi
-${orderID}
-
-🔹 Hash Blockchain
-${tx.hash}
-
-🔹 Wallet Pengirim
-${tx.from}
-
-🪙 Token
-${tx.value} ${token.toUpperCase()}
-
-💰 Estimasi Rupiah
-Rp ${receive.toLocaleString("id-ID")}
-
-📤 Wallet Exchanger
-${receiverWallet}
-
-💳 Metode Pembayaran
-${account.bank || "-"}
-
-🏦 Nomor Rekening / E-Wallet
-${account.number || "-"}
-
-👤 Nama
-${user.name || "-"}
-
-Mohon diproses ya Bun. Terima kasih 🙏`;
-
-    // ===============================
-    // BUKA WHATSAPP
-    // ===============================
-
-    window.open(
-        `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`,
-        "_blank"
-    );
-
-    // ===============================
-    // RESET UI
-    // ===============================
-
-    sendWAButton.style.display = "none";
-
-    txHashInput.value = "";
-
-    document.getElementById("txVerifyCard").style.display = "none";
-
-};
-
-
-// ===============================
-// STEP 4 AKTIF
-// ===============================
-
-const step4 = document.getElementById("step4");
-if (step4) step4.classList.add("active");
-
-} catch (e) {
-
-    console.error(e);
-
-    verifyMessage.innerText = e.toString();
-    verifyMessage.style.color = "red";
-
-    sendWAButton.style.display = "none";
+`;
 
 }
 
-});
+if(type==="contact"){
 
-document.getElementById("clearStorageBtn").onclick = () => {
+content.innerHTML=`
 
-    const confirmClear = confirm(
-        "⚠️ Semua data exchanger akan dihapus.\n\nLanjutkan?"
-    );
+<h3>📞 Kontak Resmi</h3>
 
-    if(!confirmClear) return;
+<p>WhatsApp : +6282267777834</p>
 
-    // hapus data exchanger
-    
-    localStorage.removeItem("bundawidya_account");
-    localStorage.removeItem("bw_accounts");
-    localStorage.removeItem("bw_selected");
-    localStorage.removeItem("bw_history");
-    localStorage.removeItem("bw_user");
-    localStorage.removeItem("bw_txid");
+<p>Telegram : @Victory_Pi</p>
 
-    alert("✅ Data exchanger berhasil dibersihkan");
+<p>Facebook : Alexandria Pi Network</p>
 
-    location.reload();
+`;
 
-};
+}
+
+if(type==="guide"){
+
+content.innerHTML=`
+
+<h3>📖 Cara Transaksi</h3>
+
+<ol>
+<li>Input token</li>
+<li>Kirim token</li>
+<li>Salin hash</li>
+<li>Verify hash</li>
+<li>Kirim order</li>
+</ol>
+
+`;
+
+}
+
+}
+
+function closeInfo(){
+
+document.getElementById("infoModal").style.display="none";
+
+}
+
+
 </script>
 
 
