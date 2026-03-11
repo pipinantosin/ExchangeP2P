@@ -1,0 +1,338 @@
+/* =========================
+PREMIUM CRYPTO TICKER
+========================= */
+
+.ticker{
+
+position:sticky;
+top:56px; /* sesuaikan tinggi topbar */
+
+z-index:50;
+
+width:100%;
+max-width:100%;
+
+overflow:hidden;
+
+background:#f6f7fb;
+
+border-radius:12px;
+
+margin-bottom:14px;
+
+padding:10px 0;
+
+box-shadow:0 3px 10px rgba(0,0,0,0.05);
+
+}
+
+.dark .ticker{
+background:#1f2330;
+}
+
+
+/* =========================
+TICKER TRACK
+========================= */
+
+.ticker-track{
+
+display:flex;
+
+align-items:center;
+
+gap:50px;
+
+white-space:nowrap;
+
+width:max-content;
+
+animation:tickerMove 30s linear infinite;
+
+font-weight:600;
+
+padding-left:12px;
+
+pointer-events:none; /* cegah drag scroll */
+
+}
+
+
+/* pause animasi saat hover */
+
+.ticker:hover .ticker-track{
+animation-play-state:paused;
+}
+
+
+/* =========================
+TICKER ITEM
+========================= */
+
+.ticker-item{
+
+display:flex;
+
+align-items:center;
+
+gap:8px;
+
+font-size:14px;
+
+color:#333;
+
+font-weight:600;
+
+transition:0.2s;
+
+}
+
+.dark .ticker-item{
+color:#ddd;
+}
+
+.ticker-item:hover{
+transform:scale(1.05);
+}
+
+
+/* =========================
+ICON
+========================= */
+
+.ticker-icon{
+width:18px;
+height:18px;
+object-fit:contain;
+}
+
+
+/* =========================
+TOKEN NAME
+========================= */
+
+.ticker-token{
+font-weight:700;
+letter-spacing:0.3px;
+}
+
+
+/* =========================
+PRICE
+========================= */
+
+.ticker-price{
+color:#16a34a;
+font-weight:700;
+margin-left:4px;
+}
+
+
+/* =========================
+SEPARATOR
+========================= */
+
+.ticker-sep{
+opacity:0.4;
+margin:0 8px;
+}
+
+
+/* =========================
+RULE PRICE TEXT
+========================= */
+
+.ticker-rule{
+font-size:12px;
+opacity:0.8;
+}
+
+
+/* =========================
+ANIMATION
+========================= */
+
+@keyframes tickerMove{
+
+0%{
+transform:translateX(0);
+}
+
+100%{
+transform:translateX(-50%);
+}
+
+}
+
+
+/* =========================
+NOTE TEXT
+========================= */
+
+.ticker-note{
+
+font-size:12px;
+
+opacity:0.7;
+
+margin-top:4px;
+
+text-align:center;
+
+}
+
+
+/* =========================
+MARKET STATUS
+========================= */
+
+.market-status{
+
+font-size:11px;
+
+padding:2px 6px;
+
+border-radius:6px;
+
+margin-left:6px;
+
+font-weight:600;
+
+}
+
+.market-status.live{
+
+background:#0f5132;
+
+color:#4cff9a;
+
+}
+
+
+/* =========================
+FADE EDGE EFFECT
+========================= */
+
+.ticker::before,
+.ticker::after{
+
+content:"";
+
+position:absolute;
+
+top:0;
+
+width:30px;
+
+height:100%;
+
+z-index:2;
+
+pointer-events:none;
+
+}
+
+.ticker::before{
+
+left:0;
+
+background:linear-gradient(to right,#f6f7fb,transparent);
+
+}
+
+.ticker::after{
+
+right:0;
+
+background:linear-gradient(to left,#f6f7fb,transparent);
+
+}
+
+.dark .ticker::before{
+background:linear-gradient(to right,#1f2330,transparent);
+}
+
+.dark .ticker::after{
+background:linear-gradient(to left,#1f2330,transparent);
+}
+
+/* =========================
+WALLET CARD
+========================= */
+
+.wallet-card{
+
+background:#f6f7fb;
+
+border-radius:10px;
+
+padding:12px;
+
+margin-bottom:12px;
+
+font-size:13px;
+
+}
+
+.dark .wallet-card{
+background:#1f2330;
+}
+
+.wallet-row{
+
+display:flex;
+
+justify-content:space-between;
+
+margin-bottom:6px;
+
+}
+
+.wallet-address{
+
+font-family:monospace;
+
+word-break:break-all;
+
+font-size:12px;
+
+}
+
+.wallet-card button{
+
+background:#6c63ff;
+
+border:none;
+
+color:white;
+
+padding:4px 10px;
+
+border-radius:6px;
+
+font-size:12px;
+
+}
+
+
+/* =========================
+VERIFY CARD
+========================= */
+
+#txVerifyCard{
+
+margin-top:12px;
+
+background:#f6f7fb;
+
+border-radius:10px;
+
+padding:12px;
+
+font-size:13px;
+
+}
+
+.dark #txVerifyCard{
+background:#1f2330;
+}
