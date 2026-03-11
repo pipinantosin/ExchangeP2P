@@ -1,17 +1,17 @@
 {
   "wa_number": "6285322882512",
   "wallets": {
-    "SDA": "0xD18bCb2C5dD29cDf00Fd8c6a0F63158FE644A8a7",
-    "PI": "GAHM5IWEXIKMZ4DXBGLSZPFGR6WNH7HJIFJONOQ3J35AX7V5ZVKCPINW"
+    "sidra": "0xD18bCb2C5dD29cDf00Fd8c6a0F63158FE644A8a7",
+    "pi": "GAHM5IWEXIKMZ4DXBGLSZPFGR6WNH7HJIFJONOQ3J35AX7V5ZVKCPINW"
   },
-  "SDA": {
-    "name": "SDA",
+  "sidra": {
+    "name": "SIDRA",
     "logo": "images/sda.png",
     "normal_price": 450,
     "below_min_price": 350,
     "min_sell": 500
   },
-  "PI": {
+  "pi": {
     "name": "PI",
     "logo": "images/pi.png",
     "normal_price": 3400,
