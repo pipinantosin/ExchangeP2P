@@ -47,10 +47,27 @@ function calculate(){
 
     const total = amount * price;
 
-    rupiahPreview.innerText =
-        "Rp " + total.toLocaleString("id-ID");
+    // ===============================
+    // OUTPUT ESTIMATION
+    // ===============================
 
+    if(currencySelect && currencySelect.value === "usdt"){
+
+        const usdt = total / USDT_RATE;
+
+        rupiahPreview.innerText =
+            usdt.toFixed(2) + " USDT";
+
+    }else{
+
+        rupiahPreview.innerText =
+            "Rp " + total.toLocaleString("id-ID");
+
+    }
+
+    // update preview tetap dipanggil
     updatePreview(token, amount, total);
+
 }
 
 
@@ -60,16 +77,77 @@ function calculate(){
 
 function updatePreview(token, amount, total){
 
-    if(previewSend){
-        previewSend.innerText =
-            amount > 0
-            ? amount + " " + token.toUpperCase()
-            : "-";
+    const mode = localStorage.getItem("dashboard_mode") || "sell";
+
+    // ===============================
+    // AMBIL TOKEN ICON DARI prices.json
+    // ===============================
+
+    let tokenIcon = "";
+
+    if(prices[token] && prices[token].logo){
+        tokenIcon = `<img src="${prices[token].logo}" class="tx-icon">`;
     }
 
-    if(previewReceive){
-        previewReceive.innerText =
-            "Rp " + total.toLocaleString("id-ID");
+    const usdtIcon = `<img src="images/usdt.png" class="tx-icon">`;
+
+    // ===============================
+    // FORMAT CURRENCY
+    // ===============================
+
+    let moneyText = "";
+    let moneyHTML = "";
+
+    if(currencySelect && currencySelect.value === "usdt"){
+
+        const usdt = total / USDT_RATE;
+
+        moneyText = usdt.toFixed(2) + " USDT";
+        moneyHTML = `${usdtIcon} ${moneyText}`;
+
+    }else{
+
+        moneyText = "Rp " + total.toLocaleString("id-ID");
+        moneyHTML = moneyText;
+
+    }
+
+    const tokenHTML =
+        `${tokenIcon} ${amount} ${token.toUpperCase()}`;
+
+
+    // ===============================
+    // MODE SELL
+    // ===============================
+
+    if(mode === "sell"){
+
+        if(previewSend){
+            previewSend.innerHTML =
+                amount > 0 ? tokenHTML : "-";
+        }
+
+        if(previewReceive){
+            previewReceive.innerHTML = moneyHTML;
+        }
+
+    }
+
+    // ===============================
+    // MODE BUY
+    // ===============================
+
+    if(mode === "buy"){
+
+        if(previewSend){
+            previewSend.innerHTML = moneyHTML;
+        }
+
+        if(previewReceive){
+            previewReceive.innerHTML =
+                amount > 0 ? tokenHTML : "-";
+        }
+
     }
 
     // ===============================
@@ -94,7 +172,7 @@ function updatePreview(token, amount, total){
 
     if(previewWallet){
 
-        if(token === "sidra"){
+        if(token === "SDA"){
             previewWallet.innerText =
                 account.sidra || "-";
         }
@@ -112,7 +190,19 @@ function updatePreview(token, amount, total){
 
 }
 
+function updateCurrencyIcon(){
 
+    const icon = document.getElementById("currencyIcon");
+    if(!icon || !currencySelect) return;
+
+    if(currencySelect.value === "usdt"){
+        icon.src = "images/usdt.png";
+        icon.style.display = "inline";
+    }else{
+        icon.style.display = "none"; // IDR tidak pakai icon
+    }
+
+}
 // =================================
 // EVENT INPUT
 // =================================
@@ -175,5 +265,12 @@ document.getElementById("generateBtn").onclick = () => {
 document.addEventListener("DOMContentLoaded", () => {
 
     updatePreview("-", 0, 0);
+
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    updateCurrencyIcon();
+    updateEstimation();
 
 });
