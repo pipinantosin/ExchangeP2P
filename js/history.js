@@ -15,20 +15,35 @@ function saveHistory(data) {
     localStorage.setItem(HISTORY_KEY, JSON.stringify(data));
 }
 
-// ADD HISTORY
+// ===============================
+// ADD HISTORY FIXED
+// ===============================
 function addHistory(tx) {
-    if(!tx?.hash) return;
+    if (!tx?.hash) return;
 
     let history = getHistory();
-    if(history.some(h=>h.hash===tx.hash)) return;
+    if (history.some(h => h.hash === tx.hash)) return;
+
+    // Ambil user
+    const USER = JSON.parse(localStorage.getItem("bundawidya_account")) || {};
+
+    // Hitung total jika belum ada
+    const amount = Number(tx.value || tx.amount || 0);
+    let total = Number(tx.total || 0);
+
+    if (!total) {
+        // Ambil harga token (sesuaikan fungsi ini sesuai sistemmu)
+        const price = (window.APP_CONFIG?.TOKEN_PRICE?.[tx.token?.toUpperCase()] || 0);
+        total = amount * price;
+    }
 
     const order = {
         id: tx.id || generateOrderID(tx.hash),
         hash: tx.hash,
         from: tx.from || "-",
         token: (tx.token || "SDA").toUpperCase(),
-        amount: Number(tx.value || tx.amount || 0),
-        total: Number(tx.total || 0),
+        amount: amount,
+        total: total,
         status: tx.status || "waiting",
         date: Date.now()
     };
