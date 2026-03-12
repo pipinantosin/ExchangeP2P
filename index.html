@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/modal.css">
 <link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/dashboard-mode.css">
 <link rel="stylesheet" href="css/history-panel.css">
 <link rel="stylesheet" href="css/toast.css">
 <link rel="stylesheet" href="css/all.min.css">
@@ -197,13 +198,33 @@ SELL TOKEN
     </div>
   </div>
 
-  <div class="rupiah-preview">
-    <span>Estimasi diterima</span>
-    <div id="rupiahPreview">Rp 0</div>
-  </div>
+<div class="rupiah-preview">
+
+<span id="estimateLabel">Estimasi diterima</span>
+
+<div class="rupiah-row">
+
+<div id="rupiahPreview">Rp 0</div>
+
+<div class="currency-select">
+
+<img id="currencyIcon" src="images/usdt.png">
+
+<select id="currencySelect">
+<option value="idr">IDR</option>	
+<option value="usdt">USDT</option>
+</select>
+
+</div>
+
+</div>
+
+</div>
 
   <button id="generateBtn" disabled>Membuat Transaksi</button>
 </section>
+
+
 
 <!-- ======================
 LINK & QR + VERIFY + LEDGER
@@ -498,7 +519,8 @@ SCRIPT
 <script src="js/qr.js"></script>
 <script src="js/toast.js"></script>
 <script src="js/splash.js"></script>
-
+<script src="js/dashboard-mode.js"></script>
+<script src="js/currency-toggle.js"></script>
 
 <script>
 const track = document.getElementById("tickerTrack");
