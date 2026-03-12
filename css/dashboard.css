@@ -323,3 +323,77 @@ flex-direction:row;
 
 }
 
+
+/* =========================
+RUPIAH ROW
+========================= */
+
+.rupiah-row{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-top:6px;
+gap:8px;
+}
+
+#rupiahPreview{
+font-size:18px;
+font-weight:700;
+color:#27ae60;
+}
+
+/* =========================
+CURRENCY SELECT
+========================= */
+
+.currency-select{
+display:flex;
+align-items:center;
+gap:6px;
+background:#f6f7fb;
+padding:4px 10px;
+border-radius:8px;
+min-width:70px; /* kecil seperti token */
+width:auto;
+position:relative;
+}
+
+.dark .currency-select{
+background:#1f2330;
+}
+
+.currency-select img{
+width:18px;
+height:18px;
+object-fit:contain;
+}
+
+.currency-select select{
+border:none;
+background:transparent;
+font-weight:600;
+outline:none;
+cursor:pointer;
+appearance:none;
+width:auto; /* penting supaya tidak full width */
+padding-right:14px;
+}
+
+/* arrow kecil */
+.currency-select::after{
+content:"▼";
+font-size:10px;
+position:absolute;
+right:6px;
+pointer-events:none;
+color:#888;
+}
+
+/* icon preview */
+.tx-icon{
+width:18px;
+height:18px;
+vertical-align:middle;
+margin-right:6px;
+border-radius:50%;
+}
