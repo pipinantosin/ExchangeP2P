@@ -45,14 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // ===============================
-    // LOAD PRICE
-    // ===============================
-
-    if(typeof loadPrices === "function"){
-        loadPrices();
-    }
-
 
     // ===============================
     // RENDER HISTORY
@@ -63,25 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // ===============================
-    // TOKEN LOGO
-    // ===============================
-
-    function updateTokenLogo(){
-
-        if(!tokenSelect || !tokenLogo) return;
-
-        const token = tokenSelect.value;
-
-        if(token === "sidra"){
-            tokenLogo.src = "images/sidra.png";
-        }
-
-        if(token === "pi"){
-            tokenLogo.src = "images/pi.png";
-        }
-
-    }
+  
 
 
     updateTokenLogo();
