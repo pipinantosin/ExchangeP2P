@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>Bundawidya Exchanger</title>
-
+<link rel="stylesheet" href="css/splash.css">
 <link rel="stylesheet" href="css/header.css">
 <link rel="stylesheet" href="css/price-ticker.css">
 <link rel="stylesheet" href="css/step-bar.css">
@@ -27,7 +27,15 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
 
 <body>
 
-
+<!-- ======================
+SPLASH SCREEN
+====================== -->
+<div id="splashScreen">
+  <div class="splash-wave"></div>
+  <div class="avatar-wrapper">
+    <img src="images/bunda-widya.jpg" alt="Bunda Widya">
+  </div>
+</div>
 <!-- ======================
 HEADER PREMIUM BW
 ====================== -->
@@ -99,24 +107,7 @@ Crypto Swap
 <div id="history"></div>
 
 </div>
-<!-- ======================
-HISTORY PANEL
-====================== -->
 
-<div class="history-panel">
-
-<div class="history-header">
-<h3>Riwayat Transaksi</h3>
-
-<button class="closeHistory">
-<i class="fa-solid fa-xmark"></i>
-</button>
-
-</div>
-
-<div id="history"></div>
-
-</div>
 
 
 <main class="dashboard">
@@ -473,12 +464,24 @@ cursor:pointer;
 </div>
 
 </div>
+
+<!-- ======================
+STOK SDA FLOATING PANEL
+====================== -->
+<div id="sda-stock-panel" class="sda-stock-panel">
+    <img src="images/sda.png" class="token-icon" alt="SDA">
+    <span>SDA Stock:</span>
+    <span id="sda-stock-value">Loading...</span>
+    <i class="fa-solid fa-wallet" id="sda-wallet-icon" title="Klik untuk salin wallet SDA"></i>
+</div>
 <!-- ======================
 SCRIPT
 ====================== -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<script src="js/sda-balance.js"></script>
 
 <script src="js/config.js"></script>
 <script src="js/alur-transaksi.js"></script>
@@ -494,7 +497,7 @@ SCRIPT
 <script src="js/exchanger.js"></script>
 <script src="js/qr.js"></script>
 <script src="js/toast.js"></script>
-
+<script src="js/splash.js"></script>
 
 
 <script>
@@ -502,98 +505,70 @@ const track = document.getElementById("tickerTrack");
 
 track.innerHTML = track.innerHTML + track.innerHTML;
 
-
-
-
-
-
-
-
-
-
-
 function openInfo(type){
+    const modal = document.getElementById("infoModal");
+    const content = document.getElementById("infoContent");
 
-const modal=document.getElementById("infoModal");
-const content=document.getElementById("infoContent");
+    modal.style.display = "flex";
 
-modal.style.display="flex";
+    // Tunggu sampai config siap (wallet & WA)
+    const waitConfig = () => new Promise(r => {
+        if(window.CONFIG_READY) r();
+        else setTimeout(() => waitConfig().then(r), 50);
+    });
 
-if(type==="scam"){
+    waitConfig().then(() => {
+        if(type === "scam"){
+            content.innerHTML = `
+                <h3>⚠ Peringatan Penipuan</h3>
+                <ul>
+                    <li>Admin tidak pernah DM duluan</li>
+                    <li>Akun resmi hanya @Victory_Pi</li>
+                    <li>Harga mengikuti group</li>
+                </ul>
+            `;
+        }
 
-content.innerHTML=`
+        if(type === "wallet"){
+            const sdaWallet = window.APP_CONFIG.WALLETS.SIDRA;
+            const piWallet = window.APP_CONFIG.WALLETS.PI;
+            content.innerHTML = `
+                <h3>💰 Wallet Resmi</h3>
+                <p><b>Sidra</b></p>
+                <p>${sdaWallet}</p>
+                <p><b>Pi</b></p>
+                <p>${piWallet}</p>
+            `;
+        }
 
-<h3>⚠ Peringatan Penipuan</h3>
+        if(type === "contact"){
+            const waNumber = window.APP_CONFIG.WHATSAPP.DEFAULT;
+            content.innerHTML = `
+                <h3>📞 Kontak Resmi</h3>
+                <p>WhatsApp : ${waNumber}</p>
+                <p>Telegram : @Victory_Pi</p>
+                <p>Facebook : Alexandria Pi Network</p>
+            `;
+        }
 
-<ul>
-<li>Admin tidak pernah DM duluan</li>
-<li>Akun resmi hanya @Victory_Pi</li>
-<li>Harga mengikuti group</li>
-</ul>
-
-`;
-
-}
-
-if(type==="wallet"){
-
-content.innerHTML=`
-
-<h3>💰 Wallet Resmi</h3>
-
-<p><b>Sidra</b></p>
-<p>0x27ef357B488D8CE3DC4f07F0Ea41AA502d94E357</p>
-
-<p><b>Pi</b></p>
-<p>MDFNWH6ZFJVHJDLBMNOUT35X4EEKQVJA...</p>
-
-`;
-
-}
-
-if(type==="contact"){
-
-content.innerHTML=`
-
-<h3>📞 Kontak Resmi</h3>
-
-<p>WhatsApp : +6282267777834</p>
-
-<p>Telegram : @Victory_Pi</p>
-
-<p>Facebook : Alexandria Pi Network</p>
-
-`;
-
-}
-
-if(type==="guide"){
-
-content.innerHTML=`
-
-<h3>📖 Cara Transaksi</h3>
-
-<ol>
-<li>Input token</li>
-<li>Kirim token</li>
-<li>Salin hash</li>
-<li>Verify hash</li>
-<li>Kirim order</li>
-</ol>
-
-`;
-
-}
-
+        if(type === "guide"){
+            content.innerHTML = `
+                <h3>📖 Cara Transaksi</h3>
+                <ol>
+                    <li>Input token</li>
+                    <li>Kirim token</li>
+                    <li>Salin hash</li>
+                    <li>Verify hash</li>
+                    <li>Kirim order</li>
+                </ol>
+            `;
+        }
+    });
 }
 
 function closeInfo(){
-
-document.getElementById("infoModal").style.display="none";
-
+    document.getElementById("infoModal").style.display = "none";
 }
-
-
 </script>
 
 
