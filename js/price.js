@@ -1,4 +1,10 @@
 // ===============================
+// RATE CONVERSION
+// ===============================
+
+const USDT_RATE = 15500; // 1 USDT = Rp15500
+
+// ===============================
 // GLOBAL PRICE DATA
 // ===============================
 
@@ -11,6 +17,7 @@ let pricesLoaded = false;
 // ===============================
 
 const tokenSelect = document.getElementById("sellToken");
+const currencySelect = document.getElementById("currencySelect");
 const tokenLogo   = document.getElementById("tokenLogo");
 
 
@@ -215,11 +222,25 @@ function updateEstimation(){
         return;
     }
 
-    estimateBox.innerText =
-        "Rp " + total.toLocaleString("id-ID");
+    // ===============================
+    // CURRENCY MODE
+    // ===============================
+
+    if(currencySelect && currencySelect.value === "usdt"){
+
+        const usdt = total / USDT_RATE;
+
+        estimateBox.innerText =
+            usdt.toFixed(2) + " USDT";
+
+    }else{
+
+        estimateBox.innerText =
+            "Rp " + total.toLocaleString("id-ID");
+
+    }
 
 }
-
 
 // ===============================
 // INIT
@@ -227,9 +248,54 @@ function updateEstimation(){
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    loadPrices();
+    const amountInput = document.getElementById("sellAmount");
+
+
+    // ===============================
+    // LOAD PRICE
+    // ===============================
+
+    if(typeof loadPrices === "function"){
+        loadPrices();
+    }
+
+
+    // ===============================
+    // RENDER HISTORY
+    // ===============================
+
+    if(typeof renderHistory === "function"){
+        renderHistory();
+    }
+
+
+    // ===============================
+    // INPUT AMOUNT
+    // ===============================
+
+    if(amountInput){
+
+        amountInput.addEventListener("input", () => {
+
+            if(typeof updateEstimation === "function"){
+                updateEstimation();
+            }
+
+            if(typeof calculate === "function"){
+                calculate();
+            }
+
+        });
+
+    }
+
+
+    // ===============================
+    // TOKEN CHANGE
+    // ===============================
 
     if(tokenSelect){
+
         tokenSelect.addEventListener("change", () => {
 
             updateTokenLogo();
@@ -240,15 +306,34 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
         });
+
     }
 
-    const amountInput = document.getElementById("sellAmount");
 
-    if(amountInput){
-        amountInput.addEventListener(
-            "input",
-            updateEstimation
-        );
+    // ===============================
+    // CURRENCY CHANGE
+    // ===============================
+
+    currencySelect.addEventListener("change", () => {
+
+    updateCurrencyIcon();
+
+    if(typeof updateEstimation === "function"){
+        updateEstimation();
+    }
+
+    if(typeof calculate === "function"){
+        calculate();
+    }
+
+});
+
+    // ===============================
+    // FIRST CALCULATION
+    // ===============================
+
+    if(typeof calculate === "function"){
+        calculate();
     }
 
 });
