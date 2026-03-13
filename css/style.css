@@ -200,22 +200,44 @@ font-size:14px;
 
 
 
-.sda-stock-panel {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: #fff;
-    padding: 8px 12px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: Arial, sans-serif;
-    z-index: 999;
+/* ==========================
+TOKEN STOCK PANEL
+========================== */
+
+#token-stock-panel{
+    position:fixed;
+    bottom:20px;
+    left:20px;
+    background:#fff;
+    border-radius:12px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.15);
+    padding:8px 12px;
+    font-family:Arial;
+    font-size:13px;
+    z-index:999;
 }
 
-.sda-stock-panel .token-icon {
-    width: 18px;
-    height: 18px;
+.stock-row{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    padding:2px 0;
+}
+
+.token-icon{
+    width:16px;
+    height:16px;
+}
+
+.token-name{
+    width:28px;
+}
+
+.stock-row i{
+    cursor:pointer;
+    color:#777;
+}
+
+.stock-row i:hover{
+    color:#0077ff;
 }
