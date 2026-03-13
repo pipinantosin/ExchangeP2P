@@ -17,7 +17,11 @@ let pricesLoaded = false;
 // ===============================
 
 const tokenSelect = document.getElementById("sellToken");
-const currencySelect = document.getElementById("currencySelect");
+window.currencySelect = document.getElementById("currencySelect");
+
+currencySelect.addEventListener("change", () => {
+    localStorage.setItem("currency", currencySelect.value);
+});
 const tokenLogo   = document.getElementById("tokenLogo");
 
 
