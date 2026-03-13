@@ -1,4 +1,8 @@
-const currencySelect = document.getElementById("currencySelect");
+window.currencySelect = document.getElementById("currencySelect");
+
+currencySelect.addEventListener("change", () => {
+    localStorage.setItem("currency", currencySelect.value);
+});
 
 currencySelect.addEventListener("change", ()=>{
 
