@@ -1,49 +1,110 @@
-// ===============================
-// INIT PROVIDER
-// ===============================
-const RPC_URL = "https://node.sidrachain.com/";
-const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+const RPC_URL="https://node.sidrachain.com/";
+const provider=new ethers.providers.JsonRpcProvider(RPC_URL);
 
-// ===============================
-// FORMAT BALANCE DENGAN TITIK RIBU
-// ===============================
-function formatNumber(value) {
-    return Number(value).toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function formatNumber(v){
+ return Number(v).toLocaleString("id-ID",{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 
-// ===============================
-// LOAD BALANCE SDA DINAMIS
-// ===============================
-async function loadSdaBalance() {
-    const balanceEl = document.getElementById("sda-stock-value");
-    const walletIconEl = document.getElementById("sda-wallet-icon");
+// ======================
+// LOAD SDA
+// ======================
+async function loadSdaBalance(){
 
-    if (!balanceEl || !walletIconEl) return;
+ const el=document.getElementById("sda-stock-value");
 
-    balanceEl.textContent = "Loading...";
+ const wallet=window.APP_CONFIG.WALLETS.SIDRA;
 
-    // Tunggu sampai config siap
-    while (!window.CONFIG_READY) {
-        await new Promise(r => setTimeout(r, 50));
-    }
+ document.getElementById("sda-wallet-icon").onclick=()=>{
+  navigator.clipboard.writeText(wallet);
+ };
 
-    const SDA_WALLET = window.APP_CONFIG.WALLETS.SIDRA; // ambil dari prices.json
-    walletIconEl.addEventListener("click", () => {
-        navigator.clipboard.writeText(SDA_WALLET);
-        alert("Wallet SDA disalin: " + SDA_WALLET);
-    });
+ try{
 
-    try {
-        const balBN = await provider.getBalance(SDA_WALLET);
-        const balEther = ethers.utils.formatEther(balBN);
-        balanceEl.textContent = formatNumber(balEther);
-    } catch (err) {
-        console.error("Gagal load SDA balance:", err);
-        balanceEl.textContent = "Error";
-    }
+  const balBN=await provider.getBalance(wallet);
+  const bal=ethers.utils.formatEther(balBN);
+
+  el.textContent=formatNumber(bal);
+
+ }catch(e){
+
+  el.textContent="Error";
+
+ }
+
 }
 
-// ===============================
-// AUTO LOAD
-// ===============================
-document.addEventListener("DOMContentLoaded", loadSdaBalance);
+// ======================
+// LOAD PI
+// ======================
+async function loadPiBalance(){
+
+ const el=document.getElementById("pi-stock-value");
+
+ const wallet=window.APP_CONFIG.WALLETS.PI;
+
+ document.getElementById("pi-wallet-icon").onclick=()=>{
+  navigator.clipboard.writeText(wallet);
+ };
+
+ // DETEKSI M ADDRESS
+ if(wallet.startsWith("M")){
+  el.textContent="Sub Address";
+  return;
+ }
+
+ try{
+
+  const res=await fetch(
+  "https://api.mainnet.minepi.com/accounts/"+wallet
+  );
+
+  if(!res.ok){
+   el.textContent="Wallet Error";
+   return;
+  }
+
+  const data=await res.json();
+
+  let bal=0;
+
+  if(data.balances){
+   data.balances.forEach(b=>{
+    if(b.asset_type==="native"){
+     bal=b.balance;
+    }
+   });
+  }
+
+  el.textContent=formatNumber(bal);
+
+ }catch(e){
+
+  el.textContent="Network Error";
+
+ }
+
+}
+
+// ======================
+// INIT
+// ======================
+async function initStockPanel(){
+
+ while(!window.CONFIG_READY){
+  await new Promise(r=>setTimeout(r,50));
+ }
+
+ loadSdaBalance();
+ loadPiBalance();
+
+ // AUTO REFRESH
+ setInterval(()=>{
+
+  loadSdaBalance();
+  loadPiBalance();
+
+ },15000);
+
+}
+
+document.addEventListener("DOMContentLoaded",initStockPanel);
