@@ -69,14 +69,13 @@
     // GENERATE ID TRANSAKSI DARI HASH
     // ===============================
 
-    function generateTxIDFromHash(hash) {
+    function generateTxIDFromHash(hash){
 
-        if (!hash || !hash.startsWith("0x"))
-            return generateTxID();
+    if(!hash || hash === "-")
+        return "BW-UNKNOWN";
 
-        return "BW-" + hash.slice(2, 8).toUpperCase();
-
-    }
+    return "BW-" + hash.slice(0,6).toUpperCase();
+}
 
 
     // ===============================
@@ -110,6 +109,19 @@
     // ===============================
     // TEMPLATE VERIFIED
     // ===============================
+function formatTxDate(ts){
+
+    if(!ts) return "-";
+
+    return new Date(ts * 1000).toLocaleString("id-ID",{
+        day:"2-digit",
+        month:"short",
+        year:"numeric",
+        hour:"2-digit",
+        minute:"2-digit"
+    });
+
+}
 
     window.generateVerifiedText = function (tx) {
 
@@ -141,6 +153,20 @@ const receive =
             tx?.hash ||
             document.getElementById("txHashInput")?.value ||
             "-";
+            
+            const explorerLink =
+hash && hash !== "-"
+? (
+    token?.toLowerCase() === "pi"
+    ? "https://blockexplorer.minepi.com/tx/" + hash
+    : "https://ledger.sidrachain.com/tx/" + hash
+  )
+: "-";
+            
+            const date =
+    tx?.timestamp
+    ? formatTxDate(tx.timestamp)
+    : "-";
 
         const receiverWallet =
             getReceiverWallet(token);
@@ -148,16 +174,24 @@ const receive =
         const id =
             generateTxIDFromHash(hash);
 
+const shortHash = hash
+? hash.slice(0,10) + "..." + hash.slice(-6)
+: "-";
 
-        return `🟢 Transaksi Baru BW EXCHANGER
+        return `🟢 *TRANSAKSI BARU - BW EXCHANGER*
 
 🔹 ID Transaksi
 ${id}
 
-🔹 Hash Blockchain
-${hash}
+🔹 Hash
+${shortHash}
 
-🔹 Wallet Pengirim
+🕒 Waktu
+${date}
+
+━━━━━━━━━━━━━━━
+
+💼 Wallet Pengirim
 ${senderWallet}
 
 🪙 Token
@@ -169,18 +203,28 @@ ${receive}
 📤 Wallet Exchanger
 ${receiverWallet}
 
+━━━━━━━━━━━━━━━
+
 💳 Metode Pembayaran
 ${account.bank || "-"}
 
-🏦 Nomor Rekening / E-Wallet
+🏦 Rekening / E-Wallet
 ${account.number || "-"}
 
 👤 Nama
 ${user.name || "-"}
 
-Mohon diproses ya Bun. Terima kasih 🙏`;
+🔎 Explorer
+${explorerLink}
 
-    };
+━━━━━━━━━━━━━━━
+
+🙏 Mohon diproses ya Bun.
+Terima kasih 🙏
+
+🌐 Dashboard
+https://pipinantosin.github.io/ExchangeP2P/`;
+};
 
 
     // ===============================
@@ -230,29 +274,30 @@ Mohon diproses ya Bun. Terima kasih 🙏`;
         const user =
             JSON.parse(localStorage.getItem("bundawidya_account")) || {};
 
-        // ===============================
-        // SIMPAN HISTORY
-        // ===============================
+       // ===============================
+// SIMPAN HISTORY
+// ===============================
 
-        if (typeof addHistory === "function") {
+if (typeof addHistory === "function") {
 
-            addHistory({
+    addHistory({
 
-                id: generateTxIDFromHash(tx.hash),
-                hash: tx.hash,
-                from: tx.from,
-                token: tx.token,
-                amount: tx.value,
-                total: tx.total,
-                status: "valid",
-                payment: account.bank || "-",
-                account: account.number || "-",
-                name: user.name || "-",
-                date: Date.now()
+        id: generateTxIDFromHash(tx.hash),
+        hash: tx.hash,
+        from: tx.from,
+        token: tx.token,
+        amount: tx.value,
+        total: tx.total,
+        status: "valid",
+        payment: account.bank || "-",
+        account: account.number || "-",
+        name: user.name || "-",
+        date: tx.timestamp * 1000
 
-            });
+    });
 
-        }
+}
+
 
         // ===============================
         // GENERATE TEXT WA
