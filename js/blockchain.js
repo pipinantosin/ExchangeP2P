@@ -135,7 +135,7 @@ hash : tx.hash,
 from : payment.from,
 to : payment.to,
 value : parseFloat(payment.amount),
-timestamp : Math.floor(Date.now()/1000)
+timestamp : Math.floor(new Date(tx.created_at).getTime()/1000)
 };
 
 }
@@ -230,6 +230,18 @@ await rpcCall("eth_blockNumber");
 const latestBlock =
 parseInt(latestBlockHex,16);
 
+// ===============================
+// GET BLOCK DATA (UNTUK TIMESTAMP)
+// ===============================
+
+const block = await rpcCall(
+"eth_getBlockByNumber",
+[tx.blockNumber, false]
+);
+
+const blockTimestamp =
+parseInt(block.timestamp,16);
+
 
 // ===============================
 // VALUE TOKEN
@@ -295,7 +307,7 @@ blockNumber : tx.blockNumber,
 
 nonce : tx.nonce,
 
-timestamp : Math.floor(Date.now()/1000),
+timestamp : blockTimestamp,
 
 latestBlock : latestBlock
 
