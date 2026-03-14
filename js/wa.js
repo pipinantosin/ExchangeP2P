@@ -123,11 +123,11 @@ JSON.parse(localStorage.getItem("bundawidya_account")) || {};
             "-";
 
         const amount =
-            tx?.value
-                ? tx.value + " " + token.toUpperCase()
-                : "-";
+    tx?.value
+        ? tx.value + " " + (tx.token || token).toUpperCase()
+        : "-";
 
-        const receive =
+const receive =
     tx?.total
         ? "Rp " + Number(tx.total).toLocaleString("id-ID")
         : (document.getElementById("previewReceive")?.innerText || "-");
