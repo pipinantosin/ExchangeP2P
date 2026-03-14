@@ -254,3 +254,9 @@ cursor:pointer;
 .copyBtn{background:#1976d2;color:white}
 .waBtn{background:#25D366;color:white}
 .removeBtn{background:#e53935;color:white}
+
+.history-token-logo{
+height:16px;
+vertical-align:middle;
+margin-right:5px;
+}
