@@ -2,6 +2,12 @@
 // BUNDAWIDYA BLOCKCHAIN MODULE
 // ===============================
 
+// ===============================
+// PI NETWORK HORIZON
+// ===============================
+
+const PI_HORIZON = "https://api.mainnet.minepi.com";
+
 // RPC SIDRA
 const SIDRA_RPC = "https://node.sidrachain.com";
 
@@ -76,7 +82,63 @@ return data.result;
 
 }
 
+// ===============================
+// VERIFY PI TRANSACTION
+// ===============================
 
+async function verifyPiTx(txHash){
+
+if(!window.CONFIG_READY){
+throw "Config belum siap";
+}
+
+// wallet exchanger
+const exchangerWallet =
+window.APP_CONFIG?.WALLETS?.PI;
+
+if(!exchangerWallet){
+throw "Wallet PI exchanger belum diset";
+}
+
+// ambil data transaksi
+const res = await fetch(
+PI_HORIZON + "/transactions/" + txHash
+);
+
+if(!res.ok){
+throw "Hash tidak ditemukan";
+}
+
+const tx = await res.json();
+
+// ambil operation
+const opRes = await fetch(
+PI_HORIZON + "/transactions/" + txHash + "/operations"
+);
+
+const opData = await opRes.json();
+
+const payment =
+opData._embedded.records.find(o => o.type === "payment");
+
+if(!payment){
+throw "Bukan transaksi payment";
+}
+
+// cek tujuan
+if(payment.to !== exchangerWallet){
+throw "Bukan ke wallet exchanger";
+}
+
+return {
+hash : tx.hash,
+from : payment.from,
+to : payment.to,
+value : parseFloat(payment.amount),
+timestamp : Math.floor(Date.now()/1000)
+};
+
+}
 // ===============================
 // VERIFY TRANSACTION FULL
 // ===============================
