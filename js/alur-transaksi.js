@@ -207,7 +207,7 @@ window.VERIFIED_TX = tx;
 // ===============================
 
 document.getElementById("previewSend").innerText =
-tx.value + " " + token.toUpperCase();
+tx.value + " " + window.APP_CONFIG.TOKENS[token.toUpperCase()].symbol;
 
 document.getElementById("previewReceive").innerText =
 "Rp " + receive.toLocaleString("id-ID");
@@ -237,10 +237,58 @@ document.getElementById("previewPayment").innerText =
 // SUCCESS
 // ===============================
 
+// SUCCESS
+
 verifyMessage.innerText = "Transaksi valid ✅";
 verifyMessage.style.color = "green";
 
 step4?.classList.add("active");
+
+// ===============================
+// TAMPILKAN CARD VERIFIKASI
+// ===============================
+const card = document.getElementById("txVerifyCard");
+card.style.display = "block";
+
+// isi data card
+document.getElementById("txHashDetail").innerText = truncateHash(tx.hash);
+document.getElementById("txStatusDetail").innerText = "Success";
+document.getElementById("txToDetail").innerText = truncateHash(tx.to);
+
+document.getElementById("txTokenIcon").src =
+window.APP_CONFIG.TOKENS[token.toUpperCase()].logo;
+
+document.getElementById("txAmountValue").innerText =
+tx.value + " " + window.APP_CONFIG.TOKENS[token.toUpperCase()].symbol;
+
+document.getElementById("txFeeDetail").innerText =
+(tx.txFee || 0).toFixed(6);
+
+document.getElementById("txGasUsed").innerText =
+tx.gasUsed || "-";
+
+document.getElementById("txGasLimit").innerText =
+tx.gasLimit || "-";
+
+document.getElementById("txGasPrice").innerText =
+(tx.gasPrice || 0) + " Gwei";
+
+document.getElementById("txBlock").innerText =
+tx.blockNumber || "-";
+
+document.getElementById("txNonce").innerText =
+tx.nonce || "-";
+
+document.getElementById("txConfirmations").innerText =
+(tx.latestBlock && tx.blockNumber)
+? (tx.latestBlock - parseInt(tx.blockNumber,16))
+: "-";
+
+document.getElementById("txDate").innerText =
+formatDate(tx.timestamp);
+
+// tampilkan teks konfirmasi
+document.getElementById("confirmText").style.display = "block";
 
 sendWAButton.style.display = "block";
 
