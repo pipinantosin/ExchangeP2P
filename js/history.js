@@ -38,15 +38,15 @@ function addHistory(tx) {
     }
 
     const order = {
-        id: tx.id || generateOrderID(tx.hash),
-        hash: tx.hash,
-        from: tx.from || "-",
-        token: (tx.token || "SDA").toUpperCase(),
-        amount: amount,
-        total: total,
-        status: tx.status || "waiting",
-        date: Date.now()
-    };
+    id: tx.id || generateOrderID(tx.hash),
+    hash: tx.hash,
+    from: tx.from || "-",
+    token: (tx.token || "SDA").toUpperCase(),
+    amount: amount,
+    total: total,
+    status: tx.status || "waiting",
+    date: tx.date || (tx.timestamp ? tx.timestamp * 1000 : Date.now())
+};
 
     history.unshift(order);
     saveHistory(history);
@@ -84,11 +84,22 @@ function renderHistory(){
     history.forEach(tx=>{
         const id = tx.id || "-";
         const token = tx.token || "-";
+        const tokenData = window.APP_CONFIG?.TOKENS?.[token?.toUpperCase()] || {};
+const tokenLogo = tokenData.logo || "";
+const tokenSymbol = tokenData.symbol || token;
         const amount = tx.amount || 0;
         const total = tx.total || 0;
         const hash = tx.hash || "-";
         const status = tx.status || "waiting";
-        const date = tx.date ? new Date(tx.date).toLocaleString("id-ID") : "-";
+        const date = tx.date
+? new Date(tx.date).toLocaleString("id-ID",{
+    day:"2-digit",
+    month:"short",
+    year:"numeric",
+    hour:"2-digit",
+    minute:"2-digit"
+})
+: "-";
         const wallet = tx.from || "-";
 
         const card = document.createElement("div");
@@ -99,7 +110,10 @@ function renderHistory(){
                 <span class="history-status status-${status}">${status}</span>
             </div>
             <div class="history-row history-mid">
-                <span class="history-token">${amount} ${token}</span>
+                <span class="history-token">
+    <img src="${tokenLogo}" class="history-token-logo">
+    ${amount} ${tokenSymbol}
+</span>
                 <span class="history-rp">Rp ${Number(total).toLocaleString("id-ID")}</span>
             </div>
             <div class="history-bottom">
