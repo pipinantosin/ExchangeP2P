@@ -2,7 +2,7 @@
 // RATE CONVERSION
 // ===============================
 
-const USDT_RATE = 15500; // 1 USDT = Rp15500
+const usdtRate = window.APP_CONFIG?.CURRENCY?.RATE?.USDT || 15500;
 
 // ===============================
 // GLOBAL PRICE DATA
@@ -17,7 +17,11 @@ let pricesLoaded = false;
 // ===============================
 
 const tokenSelect = document.getElementById("sellToken");
-const currencySelect = document.getElementById("currencySelect");
+window.currencySelect = document.getElementById("currencySelect");
+
+currencySelect.addEventListener("change", () => {
+    localStorage.setItem("currency", currencySelect.value);
+});
 const tokenLogo   = document.getElementById("tokenLogo");
 
 
@@ -108,16 +112,38 @@ function updateTokenLogo(){
 }
 
 
-// ===============================
-// RENDER TEXT BERJALAN (TICKER)
-// ===============================
+// ======================================
+// DAPATKAN CURRENCY USER
+// ======================================
+function getTickerCurrency() {
+    // Ambil dari settings, default IDR
+    return localStorage.getItem("selectedCurrency") || "IDR";
+}
 
-function renderTicker(){
+// ======================================
+// FORMAT HARGA UNTUK TICKER
+// ======================================
+function formatTickerPrice(priceIdr) {
+    const cur = getTickerCurrency().toUpperCase();
+    const rate = APP_CONFIG.CURRENCY.RATE[cur] || 1; // fallback 1 jika rate tidak tersedia
+    const converted = priceIdr / rate;
+
+    if(cur === "IDR") return "Rp " + Number(converted).toLocaleString("id-ID");
+    if(cur === "USD") return "$" + converted.toFixed(2);
+    if(cur === "CNY") return "¥" + converted.toFixed(2);
+    if(cur === "USDT") return converted.toFixed(2) + " USDT";
+    // Tambahkan currency lain sesuai APP_CONFIG
+    return cur + " " + converted.toFixed(2);
+}
+
+// ======================================
+// RENDER TICKER
+// ======================================
+function renderTicker() {
 
     if(!pricesLoaded) return;
 
     const ticker = document.getElementById("tickerTrack");
-
     if(!ticker) return;
 
     ticker.innerHTML = "";
@@ -125,39 +151,25 @@ function renderTicker(){
     let itemsHTML = "";
 
     Object.keys(prices).forEach(key => {
-
         if(key === "wa_number" || key === "wallets") return;
 
         const data = prices[key];
 
         itemsHTML += `
         <div class="ticker-item">
-
             <img src="${data.logo}" class="ticker-icon">
-
-            <span class="ticker-token">
-            ${data.name || key.toUpperCase()}
-            </span>
-
-            <span class="ticker-price">
-            ${rupiah(data.normal_price)}
-            </span>
-
+            <span class="ticker-token">${data.name || key.toUpperCase()}</span>
+            <span class="ticker-price">${formatTickerPrice(data.normal_price)}</span>
             <span class="ticker-sep">•</span>
-
             <span class="ticker-rule">
-            Jual < ${data.min_sell} =
-            ${rupiah(data.below_min_price)}
+            Jual < ${data.min_sell} = ${formatTickerPrice(data.below_min_price)}
             </span>
-
         </div>
         `;
-
     });
 
-    // DUPLIKASI isi ticker agar loop halus
+    // duplikasi agar loop halus
     ticker.innerHTML = itemsHTML + itemsHTML;
-
 }
 // ===============================
 // AMBIL HARGA TOKEN
@@ -183,7 +195,6 @@ function getTokenPrice(token, amount){
 // ===============================
 // UPDATE ESTIMASI
 // ===============================
-
 function updateEstimation(){
 
     if(!pricesLoaded) return;
@@ -223,12 +234,16 @@ function updateEstimation(){
     }
 
     // ===============================
-    // CURRENCY MODE
+    // CURRENCY MODE (LIVE RATE)
     // ===============================
+    const selectedCurrency = currencySelect?.value || "idr";
 
-    if(currencySelect && currencySelect.value === "usdt"){
+    if(selectedCurrency.toLowerCase() === "usdt"){
 
-        const usdt = total / USDT_RATE;
+        // ambil rate USDT live dari config
+        const usdtRate = window.APP_CONFIG?.CURRENCY?.RATE?.USDT || 15500;
+
+        const usdt = total / usdtRate;
 
         estimateBox.innerText =
             usdt.toFixed(2) + " USDT";
