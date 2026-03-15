@@ -339,7 +339,17 @@ gap:8px;
 #rupiahPreview{
 font-size:18px;
 font-weight:700;
-color:#27ae60;
+transition:0.2s;
+}
+
+/* SELL = hijau (terima uang) */
+.sell-mode #rupiahPreview{
+color:#22c55e;
+}
+
+/* BUY = merah (keluar uang) */
+.buy-mode #rupiahPreview{
+color:#ef4444;
 }
 
 /* =========================
@@ -422,8 +432,41 @@ cursor:pointer;
 transition:0.2s;
 }
 
-.mode-btn.active{
-background:#2563eb;
+/* =========================
+MODE TOGGLE
+========================= */
+
+.mode-toggle{
+display:flex;
+gap:6px;
+margin-bottom:10px;
+}
+
+.mode-btn{
+flex:1;
+padding:8px;
+border:none;
+border-radius:8px;
+background:#f1f5f9;
+font-weight:600;
+cursor:pointer;
+transition:0.2s;
+}
+
+.dark .mode-btn{
+background:#1f2330;
+color:#ddd;
+}
+
+/* SELL MODE */
+.mode-btn.active[data-mode="sell"]{
+background:#ef4444;
+color:white;
+}
+
+/* BUY MODE */
+.mode-btn.active[data-mode="buy"]{
+background:#22c55e;
 color:white;
 }
 
@@ -445,5 +488,18 @@ cursor:pointer;
 
 .mode-btn.active{
 background:#2563eb;
+color:white;
+}
+
+
+/* SELL MODE */
+.dashboard.sell-mode .mode-btn.active[data-mode="sell"]{
+background:#ef4444;
+color:white;
+}
+
+/* BUY MODE */
+.dashboard.buy-mode .mode-btn.active[data-mode="buy"]{
+background:#22c55e;
 color:white;
 }
