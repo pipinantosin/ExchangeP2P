@@ -511,6 +511,20 @@ object-fit:contain;
 
 
 
-.currency-dropdown option::before {
-    content: attr(data-icon) " ";
+.currency-dropdown{
+width:100%;
+padding:10px 12px;
+border-radius:8px;
+border:1px solid #ddd;
+background:#fff;
+font-size:14px;
+}
+
+.currency-dropdown optgroup{
+font-weight:600;
+color:#666;
+}
+
+.currency-dropdown option{
+padding:6px;
 }
