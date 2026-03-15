@@ -1,4 +1,14 @@
-const currencySelect = document.getElementById("currencySelect");
+window.currencySelect = document.getElementById("currencySelect");
+
+if (window.currencySelect) {
+    window.currencySelect.addEventListener("change", () => {
+        localStorage.setItem("selectedCurrency", window.currencySelect.value);
+
+        // ✨ Tambahkan baris ini supaya ticker & estimation update langsung
+        updateEstimation();
+        renderTicker();
+    });
+}
 
 currencySelect.addEventListener("change", ()=>{
 
