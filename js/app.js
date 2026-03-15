@@ -1,5 +1,3 @@
-let dashboardMode = localStorage.getItem("dashboardMode") || "sell";
-
 // ===============================
 // DARK MODE
 // ===============================
@@ -27,33 +25,6 @@ if (toggle) {
 }
 
 
-const darkToggle = document.getElementById("darkToggle");
-
-// ============================
-// Load dark mode saat page dibuka
-// ============================
-const darkModeStored = localStorage.getItem("darkMode") === "true";
-
-if(darkModeStored){
-  document.body.classList.add("dark");
-  darkToggle.checked = true; // sync toggle checkbox
-}else{
-  document.body.classList.remove("dark");
-  darkToggle.checked = false;
-}
-
-// ============================
-// Event toggle dark mode
-// ============================
-darkToggle.addEventListener("change", () => {
-  if(darkToggle.checked){
-    document.body.classList.add("dark");
-    localStorage.setItem("darkMode", "true");
-  }else{
-    document.body.classList.remove("dark");
-    localStorage.setItem("darkMode", "false");
-  }
-});
 // ===============================
 // INIT
 // ===============================
@@ -145,26 +116,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-document.getElementById("clearStorageBtn").onclick = () => {
 
-    const confirmClear = confirm(
-        "⚠️ Semua data exchanger akan dihapus.\n\nLanjutkan?"
-    );
-
-    if(!confirmClear) return;
-
-    // hapus data exchanger
-    
-    localStorage.removeItem("bundawidya_account");
-    localStorage.removeItem("bw_accounts");
-    localStorage.removeItem("bw_selected");
-    localStorage.removeItem("bw_history");
-    localStorage.removeItem("bw_user");
-    localStorage.removeItem("bw_txid");
-
-    alert("✅ Data exchanger berhasil dibersihkan");
-
-    location.reload();
-
-};
 
