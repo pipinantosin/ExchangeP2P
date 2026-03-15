@@ -511,3 +511,6 @@ object-fit:contain;
 
 
 
+.currency-dropdown option::before {
+    content: attr(data-icon) " ";
+}
