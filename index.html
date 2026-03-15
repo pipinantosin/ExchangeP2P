@@ -183,14 +183,8 @@ SELL TOKEN
 </div>
 </section>
 
-
-
 <!-- INPUT TOKEN & AMOUNT -->
 <section class="card">
-	<div class="mode-toggle">
-  <button class="mode-btn active" data-mode="sell">Jual</button>
-  <button class="mode-btn" data-mode="buy">Beli</button>
-</div>
   <h2><i class="fa-solid fa-arrow-down"></i> Jual Token</h2>
 
   <div class="token-input">
@@ -270,13 +264,12 @@ Klik link di atas, lalu konfirmasi dan salin alamat hash transaksi yang muncul.
     <div class="tx-detail-row"><span>Hash:</span> <span id="txHashDetail"></span></div>
     <div class="tx-detail-row"><span>Status:</span> <span id="txStatusDetail"></span></div>
     <div class="tx-detail-row"><span>Terkirim Kepada:</span> <span id="txToDetail"></span></div>
-<div class="tx-detail-row">
-  <span>Jumlah:</span> 
-  <span id="txAmountDetail">
-    <img id="txTokenIcon" style="height:18px;vertical-align:middle;margin-right:4px;">
-    <span id="txAmountValue"></span>
-  </span>
-</div>
+    <div class="tx-detail-row"><span>Jumlah:</span> 
+      <span id="txAmountDetail">
+        <img src="images/sidra.png" style="height:18px;vertical-align:middle;margin-right:4px;">
+        <span id="txAmountValue"></span>
+      </span>
+    </div>
     <div class="tx-detail-row"><span>Biaya Transaksi:</span> <span id="txFeeDetail"></span></div>
     <div class="tx-detail-row"><span>Gas Digunakan:</span> <span id="txGasUsed"></span></div>
     <div class="tx-detail-row"><span>Batas Gas:</span> <span id="txGasLimit"></span></div>
@@ -443,6 +436,14 @@ SETTING MODAL
 <h3>Pengaturan</h3>
 </div>
 
+<div class="modal-body">
+
+<label>Mode Dashboard</label>
+
+<select id="modeSelect">
+<option value="sell">Jual Token</option>
+<option value="buy">Beli Token</option>
+</select>
 
 <label>Dark Mode</label>
 
@@ -485,22 +486,14 @@ cursor:pointer;
 
 </div>
 
-<div id="token-stock-panel">
-
-  <div class="stock-row">
-      <img src="images/sda.png" class="token-icon">
-      <span class="token-name">SDA</span>
-      <span id="sda-stock-value">...</span>
-      <i class="fa-solid fa-wallet" id="sda-wallet-icon"></i>
-  </div>
-
-  <div class="stock-row">
-      <img src="images/pi.png" class="token-icon">
-      <span class="token-name">PI</span>
-      <span id="pi-stock-value">...</span>
-      <i class="fa-solid fa-wallet" id="pi-wallet-icon"></i>
-  </div>
-
+<!-- ======================
+STOK SDA FLOATING PANEL
+====================== -->
+<div id="sda-stock-panel" class="sda-stock-panel">
+    <img src="images/sda.png" class="token-icon" alt="SDA">
+    <span>SDA Stock:</span>
+    <span id="sda-stock-value">Loading...</span>
+    <i class="fa-solid fa-wallet" id="sda-wallet-icon" title="Klik untuk salin wallet SDA"></i>
 </div>
 <!-- ======================
 SCRIPT
