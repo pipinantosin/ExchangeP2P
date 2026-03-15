@@ -186,6 +186,21 @@ tx = await verifyTxFull(txHash);
 
 window.VERIFIED_TX = tx;
 
+// ===============================
+// CEK HASH SUDAH DIPAKAI
+// ===============================
+
+if(isHashUsed(tx.hash)){
+throw "Hash sudah pernah digunakan";
+}
+
+// ===============================
+// CEK TIMESTAMP TRANSAKSI
+// ===============================
+
+if(isTxTooOld(tx.timestamp)){
+throw "Transaksi terlalu lama (lebih dari 24 jam)";
+}
 
 // ===============================
 // PRICE CALCULATION
@@ -286,6 +301,35 @@ document.getElementById("txConfirmations").innerText =
 
 document.getElementById("txDate").innerText =
 formatDate(tx.timestamp);
+
+// ===============================
+// HASH & TIMESTAMP CHECK
+// ===============================
+
+// cek hash sudah pernah dipakai
+function isHashUsed(hash){
+try{
+const history =
+JSON.parse(localStorage.getItem("bw_history")) || [];
+
+return history.some(tx => tx.hash === hash);
+
+}catch{
+return false;
+}
+}
+
+// cek umur transaksi blockchain (max 24 jam)
+function isTxTooOld(timestamp){
+
+if(!timestamp) return true;
+
+const now = Math.floor(Date.now()/1000);
+const MAX_AGE = 86400; // 24 jam
+
+return (now - timestamp) > MAX_AGE;
+}
+
 
 // tampilkan teks konfirmasi
 document.getElementById("confirmText").style.display = "block";
