@@ -120,7 +120,9 @@ PRICE TICKER
 <div class="ticker">
     <div class="ticker-track" id="tickerTrack"></div>
     <div class="ticker-note">
+<span data-lang="price_notice">
 Harga dapat berubah sewaktu-waktu sesuai market
+</span>
 <span class="market-status live">LIVE</span>
 </div>
 </div>
@@ -129,19 +131,23 @@ Harga dapat berubah sewaktu-waktu sesuai market
 <span class="info-chip">INFO</span>
 
 <button class="chip" onclick="openInfo('scam')">
-<i class="fa-solid fa-shield-halved"></i> Anti Scam
+<i class="fa-solid fa-shield-halved"></i>
+<span data-lang="anti_scam">Anti Scam</span>
 </button>
 
 <button class="chip" onclick="openInfo('wallet')">
-<i class="fa-solid fa-wallet"></i> Wallet
+<i class="fa-solid fa-wallet"></i>
+<span data-lang="wallet">Wallet</span>
 </button>
 
 <button class="chip" onclick="openInfo('contact')">
-<i class="fa-solid fa-phone"></i> Kontak
+<i class="fa-solid fa-phone"></i>
+<span data-lang="contact">Kontak</span>
 </button>
 
 <button class="chip" onclick="openInfo('guide')">
-<i class="fa-solid fa-book-open"></i> Cara
+<i class="fa-solid fa-book-open"></i>
+<span data-lang="guide">Cara</span>
 </button>
 
 </div>
@@ -150,7 +156,7 @@ Harga dapat berubah sewaktu-waktu sesuai market
 
 <div class="trust-item">
 <i class="fa-solid fa-shield-halved"></i>
-<span>Anti Scam</span>
+<span data-lang="anti_scam">Anti Scam</span>
 </div>
 
 <div class="trust-item">
@@ -187,26 +193,42 @@ SELL TOKEN
 
 <!-- INPUT TOKEN & AMOUNT -->
 <section class="card">
-	<div class="mode-toggle">
-  <button class="mode-btn active" data-mode="sell">Jual</button>
-  <button class="mode-btn" data-mode="buy">Beli</button>
+
+<div class="mode-toggle">
+<button class="mode-btn active" data-mode="sell" data-lang="sell">Jual</button>
+<button class="mode-btn" data-mode="buy" data-lang="buy">Beli</button>
 </div>
-  <h2><i class="fa-solid fa-arrow-down"></i> Jual Token</h2>
 
-  <div class="token-input">
-    <input type="number" id="sellAmount" placeholder="Jumlah Token">
+<h2>
+<i class="fa-solid fa-arrow-down"></i>
+<span id="modeTitle" data-lang="sell_token">Jual Token</span>
+</h2>
 
-    <div class="token-select">
-      <img id="tokenLogo" src="images/sidra.png" alt="Token Logo">
-      <select id="sellToken">
-        <!-- options akan diisi JS -->
-      </select>
-    </div>
-  </div>
+<div class="token-input">
+
+<input
+type="number"
+id="sellAmount"
+placeholder="Jumlah Token"
+data-lang-placeholder="token_amount"
+>
+
+<div class="token-select">
+
+<img id="tokenLogo" src="images/sidra.png" alt="Token Logo">
+
+<select id="sellToken">
+<!-- options dari JS -->
+</select>
+
+</div>
+</div>
 
 <div class="rupiah-preview">
 
-<span id="estimateLabel">Estimasi diterima</span>
+<span id="estimateLabel" data-lang="estimate_receive">
+Estimasi diterima
+</span>
 
 <div class="rupiah-row">
 
@@ -217,17 +239,21 @@ SELL TOKEN
 <img id="currencyIcon" src="images/usdt.png">
 
 <select id="currencySelect">
-<option value="idr">IDR</option>	
+<option value="idr">IDR</option>
 <option value="usdt">USDT</option>
 </select>
 
 </div>
+</div>
+</div>
+
+</section>
 
 </div>
 
 </div>
 
-  <button id="generateBtn" disabled>Membuat Transaksi</button>
+  <button id="generateBtn" disabled>Buat Order Jual Token</button>
 </section>
 
 
@@ -237,63 +263,119 @@ LINK & QR + VERIFY + LEDGER
 ====================== -->
 <section class="card" id="linkSection" style="display:none;">
 
-  <h3><i class="fa-solid fa-link"></i> Link Transaksi</h3>
+<h3>
+<i class="fa-solid fa-link"></i> 
+<span data-lang="transaction_link">Link Transaksi</span>
+</h3>
 
-  <!-- Tombol link transaksi -->
-  <a id="generatedLink" href="#" target="_blank" class="btn-link">
-    Kirim Token ke Wallet Exchanger
-  </a>
+<!-- Tombol link transaksi -->
+<a id="generatedLink" href="#" target="_blank" class="btn-link">
+<span data-lang="send_token_wallet">Kirim Token ke Wallet Exchanger</span>
+</a>
 
-  <!-- QR Code -->
-  <div id="qrcode" style="margin-top:10px;"></div>
+<!-- QR Code -->
+<div id="qrcode" style="margin-top:10px;"></div>
 
- <!-- Keterangan untuk input hash -->
-<p style="margin-top:12px; font-size:14px; color:#555;">
+<!-- Keterangan hash -->
+<p style="margin-top:12px;font-size:14px;color:#555;" data-lang="hash_instruction">
 Klik link di atas, lalu konfirmasi dan salin alamat hash transaksi yang muncul.
 </p>
 
+<!-- INPUT HASH -->
+<div class="hash-verify-group" style="margin-top:6px;flex-direction:column;gap:6px;">
+<input id="txHashInput"
+data-lang-placeholder="paste_hash"
+placeholder="Paste hash transaksi"
+disabled>
 
-
-  <!-- Input hash di atas tombol -->
-  <div class="hash-verify-group" style="margin-top:6px; flex-direction:column; gap:6px;">
-    <input id="txHashInput" placeholder="Paste hash transaksi" disabled>
-    <button id="verifyTxBtn" disabled>Verify Hash</button>
-  </div>
-
-  <div id="verifyMessage" style="margin-top:6px;font-weight:600;"></div>
-
-  <!-- CARD VERIFIKASI -->
-  <div class="ledger-card" id="txVerifyCard" style="display:none;">
-
-    <h3>Detail Transaksi</h3>
-
-    <div class="tx-detail-row"><span>Hash:</span> <span id="txHashDetail"></span></div>
-    <div class="tx-detail-row"><span>Status:</span> <span id="txStatusDetail"></span></div>
-    <div class="tx-detail-row"><span>Terkirim Kepada:</span> <span id="txToDetail"></span></div>
-<div class="tx-detail-row">
-  <span>Jumlah:</span> 
-  <span id="txAmountDetail">
-    <img id="txTokenIcon" style="height:18px;vertical-align:middle;margin-right:4px;">
-    <span id="txAmountValue"></span>
-  </span>
+<button id="verifyTxBtn" disabled>
+<span data-lang="verify_hash">Verify Hash</span>
+</button>
 </div>
-    <div class="tx-detail-row"><span>Biaya Transaksi:</span> <span id="txFeeDetail"></span></div>
-    <div class="tx-detail-row"><span>Gas Digunakan:</span> <span id="txGasUsed"></span></div>
-    <div class="tx-detail-row"><span>Batas Gas:</span> <span id="txGasLimit"></span></div>
-    <div class="tx-detail-row"><span>Harga Gas:</span> <span id="txGasPrice"></span></div>
-    <div class="tx-detail-row"><span>Blok:</span> <span id="txBlock"></span></div>
-    <div class="tx-detail-row"><span>Nonce:</span> <span id="txNonce"></span></div>
-    <div class="tx-detail-row"><span>Konfirmasi:</span> <span id="txConfirmations"></span></div>
-    <div class="tx-detail-row"><span>Tanggal:</span> <span id="txDate"></span></div>
 
-  </div>
+<div id="verifyMessage" style="margin-top:6px;font-weight:600;"></div>
 
-<p id="confirmText" style="display:none;margin-top:8px;font-size:14px;color:#555;">
+<!-- CARD VERIFIKASI -->
+<div class="ledger-card" id="txVerifyCard" style="display:none;">
+
+<h3 data-lang="transaction_detail">Detail Transaksi</h3>
+
+<div class="tx-detail-row">
+<span data-lang="hash">Hash:</span>
+<span id="txHashDetail"></span>
+</div>
+
+<div class="tx-detail-row">
+<span data-lang="status">Status:</span>
+<span id="txStatusDetail"></span>
+</div>
+
+<div class="tx-detail-row">
+<span data-lang="sent_to">Terkirim Kepada:</span>
+<span id="txToDetail"></span>
+</div>
+
+<div class="tx-detail-row">
+<span data-lang="amount">Jumlah:</span>
+
+<span id="txAmountDetail">
+<img id="txTokenIcon" style="height:18px;vertical-align:middle;margin-right:4px;">
+<span id="txAmountValue"></span>
+</span>
+
+</div>
+
+<div class="tx-detail-row">
+<span data-lang="tx_fee">Biaya Transaksi:</span>
+<span id="txFeeDetail"></span>
+</div>
+
+<div class="tx-detail-row">
+<span data-lang="gas_used">Gas Digunakan:</span>
+<span id="txGasUsed"></span>
+</div>
+
+<div class="tx-detail-row">
+<span data-lang="gas_limit">Batas Gas:</span>
+<span id="txGasLimit"></span>
+</div>
+
+<div class="tx-detail-row">
+<span data-lang="gas_price">Harga Gas:</span>
+<span id="txGasPrice"></span>
+</div>
+
+<div class="tx-detail-row">
+<span data-lang="block">Blok:</span>
+<span id="txBlock"></span>
+</div>
+
+<div class="tx-detail-row">
+<span data-lang="nonce">Nonce:</span>
+<span id="txNonce"></span>
+</div>
+
+<div class="tx-detail-row">
+<span data-lang="confirmations">Konfirmasi:</span>
+<span id="txConfirmations"></span>
+</div>
+
+<div class="tx-detail-row">
+<span data-lang="date">Tanggal:</span>
+<span id="txDate"></span>
+</div>
+
+</div>
+
+<p id="confirmText"
+style="display:none;margin-top:8px;font-size:14px;color:#555;"
+data-lang="send_confirmation">
 Silakan kirim konfirmasi transaksi ke admin untuk diproses.
 </p>
-  <!-- Tombol WA sementara -->
-  <button id="sendVerifiedWA" style="display:none; margin-top:10px;">
-  <i class="fa-brands fa-whatsapp"></i>Kirim Order ke Bunda Widya
+
+<button id="sendVerifiedWA" style="display:none;margin-top:10px;">
+<i class="fa-brands fa-whatsapp"></i>
+<span data-lang="send_order_admin">Kirim Order ke Bunda Widya</span>
 </button>
 
 </section>
@@ -306,32 +388,52 @@ PREVIEW
 <div class="tx-preview">
 
 <div class="tx-box">
+
 <div class="tx-label">
-<i class="fa-solid fa-paper-plane"></i> YOU SEND
+<i class="fa-solid fa-paper-plane"></i>
+<span id="previewSendLabel" data-lang="you_send">YOU SEND</span>
 </div>
+
 <div id="previewSend" class="tx-value">-</div>
+
 </div>
+
 
 <div class="tx-box">
 
-<div class="tx-label">YOU RECEIVE</div>
+<div class="tx-label">
+<span id="previewReceiveLabel" data-lang="you_receive">YOU RECEIVE</span>
+</div>
+
 <div id="previewReceive" class="tx-value">Rp 0</div>
 
 </div>
 
 <div class="tx-box">
 
-<div class="tx-label">PAYMENT</div>
+<div class="tx-label" data-lang="payment">
+PAYMENT
+</div>
+
 <div id="previewPayment" class="tx-value">-</div>
 
 </div>
 
 <div class="tx-box">
 
-<div class="tx-label">DESTINATION</div>
-<div id="previewWallet" class="tx-value"><button class="copy-btn">
+<div class="tx-label" data-lang="destination">
+DESTINATION
+</div>
+
+<div id="previewWallet" class="tx-value">
+
+<button class="copy-btn">
 <i class="fa-regular fa-copy"></i>
-</button>-</div>
+</button>
+
+-
+
+</div>
 
 </div>
 
@@ -453,39 +555,49 @@ SETTING MODAL
 </label>
 </label>
 
+<label>Bahasa</label>
+<select id="languageSelect" class="currency-dropdown">
+<option value="id">🇮🇩 Indonesia</option>
+<option value="en">🇬🇧 English</option>
+<option value="ar">🇸🇦 العربية</option>
+<option value="zh">🇨🇳 中文</option>
+</select>
 
 <label>Mata Uang Default</label>
+
 <select id="defaultCurrency" class="currency-dropdown">
-    <!-- Asia -->
-    <optgroup label="Asia">
-        <option value="idr" data-icon="🇮🇩">IDR - Rupiah</option>
-        <option value="cny" data-icon="🇨🇳">CNY - Yuan</option>
-        <option value="myr" data-icon="🇲🇾">MYR - Ringgit</option>
-        <option value="vnd" data-icon="🇻🇳">VND - Dong</option>
-    </optgroup>
 
-    <!-- Timur Tengah -->
-    <optgroup label="Timur Tengah">
-        <option value="aed" data-icon="🇦🇪">AED - Dirham</option>
-        <option value="sar" data-icon="🇸🇦">SAR - Riyal</option>
-    </optgroup>
+<!-- Asia -->
+<optgroup label="Asia">
+<option value="idr">🇮🇩 IDR — Rupiah</option>
+<option value="cny">🇨🇳 CNY — Yuan</option>
+<option value="myr">🇲🇾 MYR — Ringgit</option>
+<option value="vnd">🇻🇳 VND — Dong</option>
+</optgroup>
 
-    <!-- Eropa -->
-    <optgroup label="Eropa">
-        <option value="eur" data-icon="🇪🇺">EUR - Euro</option>
-        <option value="gbp" data-icon="🇬🇧">GBP - Pound</option>
-    </optgroup>
+<!-- Timur Tengah -->
+<optgroup label="Timur Tengah">
+<option value="aed">🇦🇪 AED — Dirham</option>
+<option value="sar">🇸🇦 SAR — Riyal</option>
+</optgroup>
 
-    <!-- Afrika -->
-    <optgroup label="Afrika">
-        <option value="zar" data-icon="🇿🇦">ZAR - Rand</option>
-    </optgroup>
+<!-- Eropa -->
+<optgroup label="Eropa">
+<option value="eur">🇪🇺 EUR — Euro</option>
+<option value="gbp">🇬🇧 GBP — Pound</option>
+</optgroup>
 
-    <!-- Crypto / Stablecoin -->
-    <optgroup label="Crypto / Stablecoin">
-        <option value="usdt" data-icon="💵">USDT</option>
-        <option value="pi" data-icon="🟣">PI</option>
-    </optgroup>
+<!-- Afrika -->
+<optgroup label="Afrika">
+<option value="zar">🇿🇦 ZAR — Rand</option>
+</optgroup>
+
+<!-- Crypto -->
+<optgroup label="Crypto / Stablecoin">
+<option value="usdt">💲 USDT — Tether</option>
+<option value="pi">🟣 PI — Pi Network</option>
+</optgroup>
+
 </select>
 
 
@@ -582,76 +694,15 @@ SCRIPT
 <script src="js/dashboard-mode.js"></script>
 <script src="js/currency-toggle.js"></script>
 <script src="js/settings.js"></script>
+<script src="js/lang.js"></script>
+<script src="js/info.js"></script>
 
 <script>
 const track = document.getElementById("tickerTrack");
 
 track.innerHTML = track.innerHTML + track.innerHTML;
 
-function openInfo(type){
-    const modal = document.getElementById("infoModal");
-    const content = document.getElementById("infoContent");
 
-    modal.style.display = "flex";
-
-    // Tunggu sampai config siap (wallet & WA)
-    const waitConfig = () => new Promise(r => {
-        if(window.CONFIG_READY) r();
-        else setTimeout(() => waitConfig().then(r), 50);
-    });
-
-    waitConfig().then(() => {
-        if(type === "scam"){
-            content.innerHTML = `
-                <h3>⚠ Peringatan Penipuan</h3>
-                <ul>
-                    <li>Admin tidak pernah DM duluan</li>
-                    <li>Akun resmi hanya @Victory_Pi</li>
-                    <li>Harga mengikuti group</li>
-                </ul>
-            `;
-        }
-
-        if(type === "wallet"){
-            const sdaWallet = window.APP_CONFIG.WALLETS.SIDRA;
-            const piWallet = window.APP_CONFIG.WALLETS.PI;
-            content.innerHTML = `
-                <h3>💰 Wallet Resmi</h3>
-                <p><b>Sidra</b></p>
-                <p>${sdaWallet}</p>
-                <p><b>Pi</b></p>
-                <p>${piWallet}</p>
-            `;
-        }
-
-        if(type === "contact"){
-            const waNumber = window.APP_CONFIG.WHATSAPP.DEFAULT;
-            content.innerHTML = `
-                <h3>📞 Kontak Resmi</h3>
-                <p>WhatsApp : ${waNumber}</p>
-                <p>Telegram : @Victory_Pi</p>
-                <p>Facebook : Alexandria Pi Network</p>
-            `;
-        }
-
-        if(type === "guide"){
-            content.innerHTML = `
-                <h3>📖 Cara Transaksi</h3>
-                <ol>
-                    <li>Input token</li>
-                    <li>Kirim token</li>
-                    <li>Salin hash</li>
-                    <li>Verify hash</li>
-                    <li>Kirim order</li>
-                </ol>
-            `;
-        }
-    });
-}
-
-function closeInfo(){
-    document.getElementById("infoModal").style.display = "none";
-}
 </script>
 
 
