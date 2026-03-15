@@ -124,16 +124,29 @@ function getTickerCurrency() {
 // FORMAT HARGA UNTUK TICKER
 // ======================================
 function formatTickerPrice(priceIdr) {
+
     const cur = getTickerCurrency().toUpperCase();
-    const rate = APP_CONFIG.CURRENCY.RATE[cur] || 1; // fallback 1 jika rate tidak tersedia
+    const rate = APP_CONFIG?.CURRENCY?.RATE?.[cur] || 1;
+
     const converted = priceIdr / rate;
 
-    if(cur === "IDR") return "Rp " + Number(converted).toLocaleString("id-ID");
-    if(cur === "USD") return "$" + converted.toFixed(2);
-    if(cur === "CNY") return "¥" + converted.toFixed(2);
-    if(cur === "USDT") return converted.toFixed(2) + " USDT";
-    // Tambahkan currency lain sesuai APP_CONFIG
-    return cur + " " + converted.toFixed(2);
+    if(cur === "IDR"){
+        return Number(converted).toLocaleString("id-ID") + " IDR";
+    }
+
+    if(cur === "USD"){
+        return converted.toFixed(2) + " USD";
+    }
+
+    if(cur === "CNY"){
+        return converted.toFixed(2) + " CNY";
+    }
+
+    if(cur === "USDT"){
+        return converted.toFixed(2) + " USDT";
+    }
+
+    return converted.toFixed(2) + " " + cur;
 }
 
 // ======================================
