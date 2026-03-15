@@ -17,10 +17,9 @@ const sidraWallet =
 "0x53E92647E1c63f6b69cCf3bf17f43C5A96742daD";
 
 
-// =================================
+// ===============================
 // CALCULATE
-// =================================
-
+// ===============================
 function calculate(){
 
     if(!prices) return;
@@ -50,10 +49,14 @@ function calculate(){
     // ===============================
     // OUTPUT ESTIMATION
     // ===============================
+    const selectedCurrency = currencySelect?.value || "idr";
 
-    if(currencySelect && currencySelect.value === "usdt"){
+    if(selectedCurrency.toLowerCase() === "usdt"){
 
-        const usdt = total / USDT_RATE;
+        // pakai live rate dari config
+        const usdtRate = window.APP_CONFIG?.CURRENCY?.RATE?.USDT || 15500;
+
+        const usdt = total / usdtRate;
 
         rupiahPreview.innerText =
             usdt.toFixed(2) + " USDT";
@@ -65,12 +68,9 @@ function calculate(){
 
     }
 
-    // update preview tetap dipanggil
     updatePreview(token, amount, total);
 
 }
-
-
 // =================================
 // PREVIEW
 // =================================
@@ -91,30 +91,32 @@ function updatePreview(token, amount, total){
 
     const usdtIcon = `<img src="images/usdt.png" class="tx-icon">`;
 
-    // ===============================
-    // FORMAT CURRENCY
-    // ===============================
+   // ===============================
+// FORMAT CURRENCY
+// ===============================
+let moneyText = "";
+let moneyHTML = "";
 
-    let moneyText = "";
-    let moneyHTML = "";
+const selectedCurrency = currencySelect?.value?.toLowerCase() || "idr";
 
-    if(currencySelect && currencySelect.value === "usdt"){
+if(selectedCurrency === "usdt"){
 
-        const usdt = total / USDT_RATE;
+    // ambil live rate dari config, fallback ke 15500 jika belum siap
+    const usdtRate = window.APP_CONFIG?.CURRENCY?.RATE?.USDT || 15500;
 
-        moneyText = usdt.toFixed(2) + " USDT";
-        moneyHTML = `${usdtIcon} ${moneyText}`;
+    const usdt = total / usdtRate;
 
-    }else{
+    moneyText = usdt.toFixed(2) + " USDT";
+    moneyHTML = `${usdtIcon} ${moneyText}`;
 
-        moneyText = "Rp " + total.toLocaleString("id-ID");
-        moneyHTML = moneyText;
+}else{
 
-    }
+    moneyText = "Rp " + total.toLocaleString("id-ID");
+    moneyHTML = moneyText;
 
-    const tokenHTML =
-        `${tokenIcon} ${amount} ${token.toUpperCase()}`;
+}
 
+const tokenHTML = `${tokenIcon} ${amount} ${token.toUpperCase()}`;
 
     // ===============================
     // MODE SELL
