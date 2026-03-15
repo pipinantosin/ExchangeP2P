@@ -314,3 +314,16 @@ latestBlock : latestBlock
 };
 
 }
+
+
+function playSuccessSound(){
+
+const enabled = localStorage.getItem("sound_enabled") === "true";
+
+if(!enabled) return;
+
+const audio = new Audio("sounds/success.mp3");
+
+audio.play();
+
+}
