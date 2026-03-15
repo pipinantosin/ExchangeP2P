@@ -1,0 +1,325 @@
+{
+  "id": {
+    "price_notice": "Harga dapat berubah sewaktu-waktu sesuai market",
+
+    "info": "INFO",
+    "anti_scam": "Anti Scam",
+    "wallet": "Wallet",
+    "contact": "Kontak",
+    "guide": "Cara",
+
+    "fast_process": "Proses Cepat",
+    "verified_wallet": "Wallet Terverifikasi",
+    "support": "Support 24 Jam",
+
+    "sell": "Jual",
+    "buy": "Beli",
+
+    "sell_token": "Jual Token",
+    "buy_token": "Beli Token",
+
+    "token_amount": "Jumlah Token",
+
+    "estimate_receive": "Estimasi diterima",
+    "estimate_pay": "Estimasi dibayar",
+
+    "create_sell_order": "Buat Order Penjualan",
+    "create_buy_order": "Buat Order Pembelian",
+
+    "amount_placeholder": "Jumlah Token",
+
+    "ticker_sell_rule": "Jual <",
+
+    "history": "Riwayat Transaksi",
+    "status": "Status",
+    "amount": "Jumlah",
+    "date": "Tanggal",
+
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan",
+
+    "scam_title": "⚠ Peringatan Penipuan",
+    "scam_1": "Admin tidak pernah DM duluan",
+    "scam_2": "Akun resmi hanya @Victory_Pi",
+    "scam_3": "Harga mengikuti group",
+
+    "wallet_title": "💰 Wallet Resmi",
+
+    "contact_title": "📞 Kontak Resmi",
+
+    "guide_title": "📖 Cara Transaksi",
+    "guide_1": "Input token",
+    "guide_2": "Kirim token",
+    "guide_3": "Salin hash",
+    "guide_4": "Verifikasi hash",
+    "guide_5": "Kirim order",
+    
+    "transaction_link": "Link Transaksi",
+"send_token_wallet": "Kirim Token ke Wallet Exchanger",
+"hash_instruction": "Klik link di atas, lalu konfirmasi dan salin alamat hash transaksi yang muncul.",
+"paste_hash": "Paste hash transaksi",
+"verify_hash": "Verify Hash",
+"transaction_detail": "Detail Transaksi",
+"sent_to": "Terkirim Kepada",
+"tx_fee": "Biaya Transaksi",
+"gas_used": "Gas Digunakan",
+"gas_limit": "Batas Gas",
+"gas_price": "Harga Gas",
+"block": "Blok",
+"nonce": "Nonce",
+"confirmations": "Konfirmasi",
+"send_confirmation": "Silakan kirim konfirmasi transaksi ke admin untuk diproses.",
+"send_order_admin": "Kirim Order ke Admin",
+"you_send": "ANDA KIRIM",
+"you_receive": "ANDA MENERIMA",
+"payment": "PEMBAYARAN",
+"destination": "DESTINASI",
+"hash": "Hash",
+
+"you_pay": "ANDA BAYAR",
+"you_receive_token": "ANDA TERIMA TOKEN"
+  },
+
+  "en": {
+    "price_notice": "Prices may change at any time according to market conditions",
+
+    "info": "INFO",
+    "anti_scam": "Anti Scam Protection",
+    "wallet": "Wallet",
+    "contact": "Contact",
+    "guide": "Guide",
+
+    "fast_process": "Fast Process",
+    "verified_wallet": "Verified Wallet",
+    "support": "24h Support",
+
+    "sell": "Sell",
+    "buy": "Buy",
+
+    "sell_token": "Sell Token",
+    "buy_token": "Buy Token",
+
+    "token_amount": "Token Amount",
+
+    "estimate_receive": "Estimated Receive",
+    "estimate_pay": "Estimated Payment",
+
+    "create_sell_order": "Create Sell Order",
+    "create_buy_order": "Create Buy Order",
+
+    "amount_placeholder": "Token Amount",
+
+    "ticker_sell_rule": "Sell <",
+
+    "history": "Transaction History",
+    "status": "Status",
+    "amount": "Amount",
+    "date": "Date",
+
+    "loading": "Loading...",
+    "error": "An error occurred",
+
+    "scam_title": "⚠ Scam Warning",
+    "scam_1": "Admin will never DM first",
+    "scam_2": "Official account only @Victory_Pi",
+    "scam_3": "Prices follow the group",
+
+    "wallet_title": "💰 Official Wallet",
+
+    "contact_title": "📞 Official Contact",
+
+    "guide_title": "📖 Transaction Guide",
+    "guide_1": "Enter token amount",
+    "guide_2": "Send token",
+    "guide_3": "Copy hash",
+    "guide_4": "Verify hash",
+    "guide_5": "Send order",
+    
+    "transaction_link": "Transaction Link",
+    "send_token_wallet": "Send Token to Exchanger Wallet",
+    "hash_instruction": "Click the link above, confirm the transaction, and copy the transaction hash.",
+    "paste_hash": "Paste transaction hash",
+    "verify_hash": "Verify Hash",
+    "transaction_detail": "Transaction Details",
+    "sent_to": "Sent To",
+    "tx_fee": "Transaction Fee",
+    "gas_used": "Gas Used",
+    "gas_limit": "Gas Limit",
+    "gas_price": "Gas Price",
+    "block": "Block",
+    "nonce": "Nonce",
+    "confirmations": "Confirmations",
+    "send_confirmation": "Please send the transaction confirmation to admin for processing.",
+    "send_order_admin": "Send Order to Admin",
+    "you_send": "YOU SEND",
+    "you_receive": "YOU RECEIVE",
+    "payment": "PAYMENT",
+    "destination": "DESTINATION",
+    "hash": "Hash",
+    
+    "you_pay": "YOU PAY",
+"you_receive_token": "YOU RECEIVE TOKEN"
+  },
+
+  "ar": {
+    "price_notice": "قد تتغير الأسعار في أي وقت حسب السوق",
+
+    "info": "معلومات",
+    "anti_scam": "حماية من الاحتيال",
+    "wallet": "المحفظة",
+    "contact": "اتصال",
+    "guide": "دليل",
+
+    "fast_process": "عملية سريعة",
+    "verified_wallet": "محفظة موثوقة",
+    "support": "دعم 24 ساعة",
+
+    "sell": "بيع",
+    "buy": "شراء",
+
+    "sell_token": "بيع العملة",
+    "buy_token": "شراء العملة",
+
+    "token_amount": "كمية العملة",
+
+    "estimate_receive": "القيمة المستلمة",
+    "estimate_pay": "القيمة المدفوعة",
+
+    "create_sell_order": "إنشاء طلب بيع",
+    "create_buy_order": "إنشاء طلب شراء",
+
+    "amount_placeholder": "كمية العملة",
+
+    "ticker_sell_rule": "بيع أقل من",
+
+    "history": "سجل المعاملات",
+    "status": "الحالة",
+    "amount": "الكمية",
+    "date": "التاريخ",
+
+    "loading": "جارٍ التحميل...",
+    "error": "حدث خطأ",
+
+    "scam_title": "⚠ تحذير من الاحتيال",
+    "scam_1": "المشرف لا يرسل رسالة أولاً",
+    "scam_2": "الحساب الرسمي فقط @Victory_Pi",
+    "scam_3": "السعر يتبع المجموعة",
+
+    "wallet_title": "💰 المحفظة الرسمية",
+
+    "contact_title": "📞 الاتصال الرسمي",
+
+    "guide_title": "📖 طريقة المعاملة",
+    "guide_1": "أدخل كمية العملة",
+    "guide_2": "أرسل العملة",
+    "guide_3": "انسخ الهاش",
+    "guide_4": "تحقق من الهاش",
+    "guide_5": "أرسل الطلب",
+    
+    "transaction_link": "رابط المعاملة",
+    "send_token_wallet": "إرسال العملة إلى محفظة المبدّل",
+    "hash_instruction": "اضغط على الرابط أعلاه ثم أكد المعاملة وانسخ رمز الهاش الخاص بها.",
+    "paste_hash": "الصق رمز الهاش",
+    "verify_hash": "تحقق من الهاش",
+    "transaction_detail": "تفاصيل المعاملة",
+    "sent_to": "تم الإرسال إلى",
+    "tx_fee": "رسوم المعاملة",
+    "gas_used": "الغاز المستخدم",
+    "gas_limit": "حد الغاز",
+    "gas_price": "سعر الغاز",
+    "block": "الكتلة",
+    "nonce": "نونـس",
+    "confirmations": "عدد التأكيدات",
+    "send_confirmation": "يرجى إرسال تأكيد المعاملة إلى المسؤول للمعالجة.",
+    "send_order_admin": "إرسال الطلب إلى المسؤول",
+    "you_send": "أنت ترسل",
+    "you_receive": "أنت تستلم",
+    "payment": "الدفع",
+    "destination": "الوجهة",
+    "hash": "الهاش",
+    
+    "you_pay": "أنت تدفع",
+"you_receive_token": "تستلم العملة"
+  },
+
+  "zh": {
+    "price_notice": "价格可能随市场变化",
+
+    "info": "信息",
+    "anti_scam": "防诈骗",
+    "wallet": "钱包",
+    "contact": "联系",
+    "guide": "指南",
+
+    "fast_process": "快速处理",
+    "verified_wallet": "已验证钱包",
+    "support": "24小时支持",
+
+    "sell": "出售",
+    "buy": "购买",
+
+    "sell_token": "出售代币",
+    "buy_token": "购买代币",
+
+    "token_amount": "代币数量",
+
+    "estimate_receive": "预计收到",
+    "estimate_pay": "预计支付",
+
+    "create_sell_order": "创建卖单",
+    "create_buy_order": "创建买单",
+
+    "amount_placeholder": "代币数量",
+
+    "ticker_sell_rule": "卖出 <",
+
+    "history": "交易记录",
+    "status": "状态",
+    "amount": "数量",
+    "date": "日期",
+
+    "loading": "加载中...",
+    "error": "发生错误",
+
+    "scam_title": "⚠ 防诈骗警告",
+    "scam_1": "管理员不会主动私信",
+    "scam_2": "官方账号仅 @Victory_Pi",
+    "scam_3": "价格以群组为准",
+
+    "wallet_title": "💰 官方钱包",
+
+    "contact_title": "📞 官方联系方式",
+
+    "guide_title": "📖 交易步骤",
+    "guide_1": "输入代币数量",
+    "guide_2": "发送代币",
+    "guide_3": "复制哈希",
+    "guide_4": "验证哈希",
+    "guide_5": "提交订单",
+    
+    "transaction_link": "交易链接",
+    "send_token_wallet": "发送代币到兑换钱包",
+    "hash_instruction": "点击上方链接确认交易，并复制交易哈希。",
+    "paste_hash": "粘贴交易哈希",
+    "verify_hash": "验证哈希",
+    "transaction_detail": "交易详情",
+    "sent_to": "发送到",
+    "tx_fee": "交易费用",
+    "gas_used": "已用 Gas",
+    "gas_limit": "Gas 限制",
+    "gas_price": "Gas 价格",
+    "block": "区块",
+    "nonce": "Nonce",
+    "confirmations": "确认数",
+    "send_confirmation": "请将交易确认发送给管理员以进行处理。",
+    "send_order_admin": "发送订单给管理员",
+    "you_send": "您发送",
+    "you_receive": "您收到",
+    "payment": "支付",
+    "destination": "目标地址",
+    "hash": "哈希",
+    
+    "you_pay": "您支付",
+"you_receive_token": "您收到代币"
+  }
+}
