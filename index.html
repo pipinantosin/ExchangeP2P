@@ -183,8 +183,14 @@ SELL TOKEN
 </div>
 </section>
 
+
+
 <!-- INPUT TOKEN & AMOUNT -->
 <section class="card">
+	<div class="mode-toggle">
+  <button class="mode-btn active" data-mode="sell">Jual</button>
+  <button class="mode-btn" data-mode="buy">Beli</button>
+</div>
   <h2><i class="fa-solid fa-arrow-down"></i> Jual Token</h2>
 
   <div class="token-input">
@@ -264,12 +270,13 @@ Klik link di atas, lalu konfirmasi dan salin alamat hash transaksi yang muncul.
     <div class="tx-detail-row"><span>Hash:</span> <span id="txHashDetail"></span></div>
     <div class="tx-detail-row"><span>Status:</span> <span id="txStatusDetail"></span></div>
     <div class="tx-detail-row"><span>Terkirim Kepada:</span> <span id="txToDetail"></span></div>
-    <div class="tx-detail-row"><span>Jumlah:</span> 
-      <span id="txAmountDetail">
-        <img src="images/sidra.png" style="height:18px;vertical-align:middle;margin-right:4px;">
-        <span id="txAmountValue"></span>
-      </span>
-    </div>
+<div class="tx-detail-row">
+  <span>Jumlah:</span> 
+  <span id="txAmountDetail">
+    <img id="txTokenIcon" style="height:18px;vertical-align:middle;margin-right:4px;">
+    <span id="txAmountValue"></span>
+  </span>
+</div>
     <div class="tx-detail-row"><span>Biaya Transaksi:</span> <span id="txFeeDetail"></span></div>
     <div class="tx-detail-row"><span>Gas Digunakan:</span> <span id="txGasUsed"></span></div>
     <div class="tx-detail-row"><span>Batas Gas:</span> <span id="txGasLimit"></span></div>
@@ -438,26 +445,59 @@ SETTING MODAL
 
 <div class="modal-body">
 
-<label>Mode Dashboard</label>
-
-<select id="modeSelect">
-<option value="sell">Jual Token</option>
-<option value="buy">Beli Token</option>
-</select>
-
-<label>Dark Mode</label>
-
-<div class="setting-item">
-
 <label class="toggle-row">
-  <span>Dark Mode</span>
-  <label class="switch">
-    <input type="checkbox" id="darkToggle">
-    <span class="slider"></span>
-  </label>
+<span>Dark Mode</span>
+<label class="switch">
+<input type="checkbox" id="darkToggle">
+<span class="slider"></span>
+</label>
 </label>
 
-</div>
+
+<label>Mata Uang Default</label>
+<select id="defaultCurrency" class="currency-dropdown">
+    <!-- Asia -->
+    <optgroup label="Asia">
+        <option value="idr" data-icon="🇮🇩">IDR - Rupiah</option>
+        <option value="cny" data-icon="🇨🇳">CNY - Yuan</option>
+        <option value="myr" data-icon="🇲🇾">MYR - Ringgit</option>
+        <option value="vnd" data-icon="🇻🇳">VND - Dong</option>
+    </optgroup>
+
+    <!-- Timur Tengah -->
+    <optgroup label="Timur Tengah">
+        <option value="aed" data-icon="🇦🇪">AED - Dirham</option>
+        <option value="sar" data-icon="🇸🇦">SAR - Riyal</option>
+    </optgroup>
+
+    <!-- Eropa -->
+    <optgroup label="Eropa">
+        <option value="eur" data-icon="🇪🇺">EUR - Euro</option>
+        <option value="gbp" data-icon="🇬🇧">GBP - Pound</option>
+    </optgroup>
+
+    <!-- Afrika -->
+    <optgroup label="Afrika">
+        <option value="zar" data-icon="🇿🇦">ZAR - Rand</option>
+    </optgroup>
+
+    <!-- Crypto / Stablecoin -->
+    <optgroup label="Crypto / Stablecoin">
+        <option value="usdt" data-icon="💵">USDT</option>
+        <option value="pi" data-icon="🟣">PI</option>
+    </optgroup>
+</select>
+
+
+<label class="toggle-row">
+<span>Notifikasi Suara</span>
+<label class="switch">
+<input type="checkbox" id="soundToggle">
+<span class="slider"></span>
+</label>
+</label>
+
+
 <button id="clearStorageBtn" style="
 padding:10px 16px;
 background:#e53935;
@@ -469,9 +509,21 @@ cursor:pointer;
 ">
 🧹 Bersihkan Data Storage
 </button>
+
+
+<div style="
+margin-top:12px;
+font-size:12px;
+opacity:.6;
+text-align:center;
+">
+Bundawidya Exchanger v1.0
 </div>
 
 </div>
+
+</div>
+
 </div>
 
 <div id="infoModal" class="modal-info">
@@ -486,14 +538,22 @@ cursor:pointer;
 
 </div>
 
-<!-- ======================
-STOK SDA FLOATING PANEL
-====================== -->
-<div id="sda-stock-panel" class="sda-stock-panel">
-    <img src="images/sda.png" class="token-icon" alt="SDA">
-    <span>SDA Stock:</span>
-    <span id="sda-stock-value">Loading...</span>
-    <i class="fa-solid fa-wallet" id="sda-wallet-icon" title="Klik untuk salin wallet SDA"></i>
+<div id="token-stock-panel">
+
+  <div class="stock-row">
+      <img src="images/sda.png" class="token-icon">
+      <span class="token-name">SDA</span>
+      <span id="sda-stock-value">...</span>
+      <i class="fa-solid fa-wallet" id="sda-wallet-icon"></i>
+  </div>
+
+  <div class="stock-row">
+      <img src="images/pi.png" class="token-icon">
+      <span class="token-name">PI</span>
+      <span id="pi-stock-value">...</span>
+      <i class="fa-solid fa-wallet" id="pi-wallet-icon"></i>
+  </div>
+
 </div>
 <!-- ======================
 SCRIPT
@@ -521,6 +581,7 @@ SCRIPT
 <script src="js/splash.js"></script>
 <script src="js/dashboard-mode.js"></script>
 <script src="js/currency-toggle.js"></script>
+<script src="js/settings.js"></script>
 
 <script>
 const track = document.getElementById("tickerTrack");
