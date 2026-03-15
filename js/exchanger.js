@@ -13,8 +13,7 @@ const previewWallet  = document.getElementById("previewWallet");
 
 const generatedLink = document.getElementById("generatedLink");
 
-const sidraWallet =
-"0x53E92647E1c63f6b69cCf3bf17f43C5A96742daD";
+
 
 
 // ===============================
