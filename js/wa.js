@@ -3,6 +3,20 @@
 // Template terbaru BW EXCHANGER
 // ===============================
 
+function isHashUsed(hash){
+
+    try{
+        const history =
+        JSON.parse(localStorage.getItem("bw_history")) || [];
+
+        return history.some(tx => tx.hash === hash);
+
+    }catch{
+        return false;
+    }
+
+}
+
 (function () {
 
     // ===============================
@@ -223,7 +237,7 @@ ${explorerLink}
 Terima kasih 🙏
 
 🌐 Dashboard
-https://pipinantosin.github.io/ExchangeP2P/`;
+https://bit.ly/bundawidya-exchange`;
 };
 
 
