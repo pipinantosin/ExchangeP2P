@@ -4,88 +4,69 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-const dashboard = document.querySelector(".dashboard");
-const title = document.querySelector(".card h2");
-const generateBtn = document.getElementById("generateBtn");
-const estimateLabel = document.getElementById("estimateLabel");
-const modeButtons = document.querySelectorAll(".mode-btn");
+    const modeSelect = document.getElementById("modeSelect");
+    const dashboard = document.querySelector(".dashboard");
+    const title = document.querySelector(".card h2");
+    const generateBtn = document.getElementById("generateBtn");
+    const estimateLabel = document.getElementById("estimateLabel");
 
-function applyMode(mode){
+    function applyMode(mode){
 
-    if(mode === "buy"){
+        if(mode === "buy"){
 
-        dashboard.classList.add("buy-mode");
-        dashboard.classList.remove("sell-mode");
+            dashboard.classList.add("buy-mode");
+            dashboard.classList.remove("sell-mode");
 
-        if(title){
-            title.innerHTML =
-            '<i class="fa-solid fa-arrow-up"></i> Beli Token';
+            if(title){
+                title.innerHTML =
+                '<i class="fa-solid fa-arrow-up"></i> Beli Token';
+            }
+
+            if(generateBtn){
+                generateBtn.textContent = "Buat Order Pembelian";
+            }
+
+            if(estimateLabel){
+                estimateLabel.textContent = "Estimasi dibayar";
+            }
+
+        }else{
+
+            dashboard.classList.add("sell-mode");
+            dashboard.classList.remove("buy-mode");
+
+            if(title){
+                title.innerHTML =
+                '<i class="fa-solid fa-arrow-down"></i> Jual Token';
+            }
+
+            if(generateBtn){
+                generateBtn.textContent = "Membuat Transaksi";
+            }
+
+            if(estimateLabel){
+                estimateLabel.textContent = "Estimasi diterima";
+            }
+
         }
 
-        if(generateBtn){
-            generateBtn.textContent = "Buat Order Pembelian";
-        }
-
-        if(estimateLabel){
-            estimateLabel.textContent = "Estimasi dibayar";
-        }
-
-    }else{
-
-        dashboard.classList.add("sell-mode");
-        dashboard.classList.remove("buy-mode");
-
-        if(title){
-            title.innerHTML =
-            '<i class="fa-solid fa-arrow-down"></i> Jual Token';
-        }
-
-        if(generateBtn){
-            generateBtn.textContent = "Membuat Transaksi";
-        }
-
-        if(estimateLabel){
-            estimateLabel.textContent = "Estimasi diterima";
-        }
-
+        localStorage.setItem("dashboard_mode", mode);
     }
 
-    localStorage.setItem("dashboard_mode", mode);
-}
-
-
-// ===============================
-// TOGGLE BUTTON
-// ===============================
-
-modeButtons.forEach(btn => {
-
-    btn.addEventListener("click", () => {
-
-        const mode = btn.dataset.mode;
-
-        applyMode(mode);
-
-        modeButtons.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-
-    });
-
-});
-
-
-// ===============================
-// LOAD MODE
-// ===============================
-
-const savedMode = localStorage.getItem("dashboard_mode") || "sell";
-
-applyMode(savedMode);
-
-modeButtons.forEach(btn => {
-    if(btn.dataset.mode === savedMode){
-        btn.classList.add("active");
+    // saat dropdown berubah
+    if(modeSelect){
+        modeSelect.addEventListener("change", () => {
+            applyMode(modeSelect.value);
+        });
     }
-});
+
+    // load mode saat halaman dibuka
+    const savedMode = localStorage.getItem("dashboard_mode") || "sell";
+
+    if(modeSelect){
+        modeSelect.value = savedMode;
+    }
+
+    applyMode(savedMode);
 
 });
