@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>Prices JSON Generator</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+margin:0;
+padding:20px;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+}
+
+.card{
+background:#1e293b;
+padding:15px;
+border-radius:12px;
+margin-bottom:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.4);
+}
+
+.card h3{
+margin-top:0;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:6px 0;
+border-radius:8px;
+border:none;
+font-size:14px;
+}
+
+label{
+font-size:13px;
+opacity:0.8;
+}
+
+button{
+padding:12px;
+border:none;
+border-radius:10px;
+font-size:14px;
+cursor:pointer;
+}
+
+.btn{
+width:100%;
+margin-top:10px;
+}
+
+.btn-add{
+background:#16a34a;
+color:white;
+}
+
+.btn-generate{
+background:#2563eb;
+color:white;
+}
+
+.btn-copy{
+background:#9333ea;
+color:white;
+}
+
+.btn-download{
+background:#ea580c;
+color:white;
+}
+
+.btn-delete{
+background:#dc2626;
+margin-top:10px;
+}
+
+pre{
+background:#020617;
+padding:10px;
+border-radius:10px;
+overflow:auto;
+max-height:300px;
+font-size:12px;
+}
+
+/* TOAST */
+#toast {
+  visibility: hidden;
+  min-width: 200px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 12px;
+  position: fixed;
+  z-index: 9999;
+  top: 20px;
+  right: 20px;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.5s, transform 0.5s;
+  transform: translateY(-20px);
+}
+
+#toast.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Prices JSON Generator</h1>
+
+</div>
+<label>Import prices.json</label>
+<input type="file" id="importJSON" accept=".json">
+
+<br><br>
+	
+<div class="card">
+<h3>WhatsApp Admin</h3>
+
+<label>Nomor WhatsApp</label>
+<input id="wa" placeholder="628xxxxxxxxxx">
+</div>
+
+
+<div id="tokenContainer"></div>
+
+<button class="btn btn-add" onclick="addCustomToken()">+ Custom Token</button>
+
+<div class="card">
+
+<button class="btn btn-generate" onclick="generateJSON()">Save</button>
+
+<button class="btn btn-copy" onclick="copyJSON()">Copy JSON</button>
+
+<button class="btn btn-download" onclick="downloadJSON()">Download prices.json</button>
+
+
+
+
+<div class="card">
+
+<h3>Upload ke GitHub</h3>
+
+<label>Token Classic</label>
+<input type="password" id="classicToken" placeholder="ghp_xxxxxxxxx">
+
+<label>GitHub Username</label>
+<input type="text" id="githubUser" placeholder="username">
+
+<label>Repository</label>
+<input type="text" id="githubRepo" placeholder="repo-name">
+
+<p>File target: <b>data/prices.json</b></p>
+
+<button class="btn btn-generate" onclick="uploadToGitHub()">Upload prices.json</button>
+
+</div>
+
+<div class="card">
+  <h3>Upload Gambar Token</h3>
+
+  <label>Pilih Token</label>
+  <select id="imageTokenSelect"></select>
+
+  <label>Pilih Gambar</label>
+  <input type="file" id="tokenImageFile" accept="image/*">
+
+  <div id="imagePreview" style="margin-top:10px;"></div>
+
+  <button class="btn btn-generate" onclick="uploadTokenImage()">Upload ke GitHub</button>
+</div>
+
+<div class="card">
+
+<h3>JSON Result</h3>
+
+<pre id="jsonOutput"></pre>
+
+</div>
+
+</div>
+
+<div id="toast"></div>
+
+
+
+<script>
+	
+	
+
+
+
+const container = document.getElementById("tokenContainer")
+
+function autoSave(){
+
+const data={
+
+wa:document.getElementById("wa").value,
+
+githubUser:document.getElementById("githubUser").value,
+
+githubRepo:document.getElementById("githubRepo").value,
+
+githubToken:document.getElementById("classicToken").value,
+
+tokens:[]
+}
+
+document.querySelectorAll("#tokenContainer .card").forEach(card=>{
+
+data.tokens.push({
+
+name:card.querySelector(".token-name").value,
+
+id:card.querySelector(".token-id").value,
+
+wallet:card.querySelector(".token-wallet").value,
+
+normal:card.querySelector(".token-normal").value,
+
+below:card.querySelector(".token-below").value,
+
+minsell:card.querySelector(".token-minsell").value
+
+})
+
+})
+
+localStorage.setItem("prices_generator_data",JSON.stringify(data))
+
+}
+
+let tokens = []
+
+function createTokenCard(id,name,locked=true){
+
+const card = document.createElement("div")
+card.className="card"
+card.dataset.id=id
+
+card.innerHTML=`
+
+<h3>${name || "Custom Token"}</h3>
+
+<label>Name</label>
+<input class="token-name" value="${name}" ${locked?"readonly":""}>
+
+<label>ID</label>
+<input class="token-id" value="${id}" ${locked?"readonly":""}>
+
+<label>Wallet Address</label>
+<input class="token-wallet">
+
+<label>Normal Price</label>
+<input class="token-normal" type="number">
+
+<label>Below Min Price</label>
+<input class="token-below" type="number">
+
+<label>Min Sell</label>
+<input class="token-minsell" type="number">
+
+${locked?"":'<button class="btn btn-delete">Delete Token</button>'}
+
+`
+
+if(!locked){
+
+card.querySelector(".btn-delete").onclick=()=>{
+card.remove()
+}
+
+}
+
+container.appendChild(card)
+
+}
+
+function addCustomToken(){
+
+createTokenCard("token"+Date.now(),"",false)
+
+}
+
+function formatWA(){
+
+let wa=document.getElementById("wa")
+
+wa.addEventListener("input",()=>{
+
+let v=wa.value.replace(/\D/g,'')
+
+if(v.startsWith("0")){
+
+v="62"+v.substring(1)
+
+}
+
+wa.value=v
+
+saveLocal()
+
+})
+
+}
+
+function generateJSON(){
+
+let wa=document.getElementById("wa").value
+
+let result={
+wa_number:wa,
+wallets:{}
+}
+
+document.querySelectorAll("#tokenContainer .card").forEach(card=>{
+
+let idInput=card.querySelector(".token-id")
+let nameInput=card.querySelector(".token-name")
+
+if(!idInput || !nameInput) return
+
+let idToken=idInput.value.trim()      // SDA
+let nameToken=nameInput.value.trim()  // sidra
+
+let wallet=card.querySelector(".token-wallet").value
+
+let normal=Number(card.querySelector(".token-normal").value)
+let below=Number(card.querySelector(".token-below").value)
+let minsell=Number(card.querySelector(".token-minsell").value)
+
+let key=nameToken.toLowerCase()
+
+// wallets
+result.wallets[key]=wallet
+
+// token data
+result[key]={
+
+name:idToken,
+
+logo:`images/${idToken.toLowerCase()}.png`,
+
+normal_price:normal,
+
+below_min_price:below,
+
+min_sell:minsell
+
+}
+
+})
+
+document.getElementById("jsonOutput").textContent=
+JSON.stringify(result,null,2)
+
+saveLocal()
+
+}
+
+function showToast(message, duration=2000){
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  
+  setTimeout(()=>{
+    toast.classList.remove("show");
+  }, duration);
+}
+
+function copyJSON(){
+
+let text=document.getElementById("jsonOutput").textContent
+
+navigator.clipboard.writeText(text)
+
+alert("JSON copied")
+
+}
+
+function downloadJSON(){
+
+let text=document.getElementById("jsonOutput").textContent
+
+let blob=new Blob([text],{type:"application/json"})
+
+let a=document.createElement("a")
+
+a.href=URL.createObjectURL(blob)
+
+a.download="prices.json"
+
+a.click()
+
+}
+
+function saveLocal(){
+
+localStorage.setItem("prices_generator",
+document.body.innerHTML)
+
+}
+
+function loadLocal(){
+
+let data=localStorage.getItem("prices_generator")
+
+if(data){
+
+document.body.innerHTML=data
+
+}
+
+}
+
+formatWA()
+
+createTokenCard("SDA","sidra",true)
+createTokenCard("PI","pi",true)
+
+
+document.getElementById("importJSON").addEventListener("change", function(event){
+
+const file = event.target.files[0]
+if(!file) return
+
+const reader = new FileReader()
+
+reader.onload = function(e){
+
+try{
+
+const json = JSON.parse(e.target.result)
+
+// WA
+if(json.wa_number){
+document.getElementById("wa").value = json.wa_number
+}
+
+// hapus token lama
+document.getElementById("tokenContainer").innerHTML=""
+
+// buat token dari JSON
+for(const key in json){
+
+if(key==="wa_number" || key==="wallets") continue
+
+const tokenData = json[key]
+
+const idToken = tokenData.name
+const nameToken = key
+
+const locked = (key === "sidra" || key === "pi")
+
+createTokenCard(idToken, nameToken, locked)
+
+const card = document.querySelector(`[data-id="${idToken}"]`)
+
+card.querySelector(".token-wallet").value = json.wallets?.[key] || ""
+card.querySelector(".token-normal").value = tokenData.normal_price || 0
+card.querySelector(".token-below").value = tokenData.below_min_price || 0
+card.querySelector(".token-minsell").value = tokenData.min_sell || 0
+
+}
+
+generateJSON()
+
+autoSave()
+
+alert("prices.json berhasil di import")
+
+}catch(err){
+
+console.error(err)
+alert("Format JSON tidak valid")
+
+}
+
+}
+
+reader.readAsText(file)
+
+})
+
+
+
+// ==========================
+// GITHUB TOKEN ENCRYPT
+// ==========================
+function encryptToken(token){
+return btoa(token)
+}
+
+function decryptToken(token){
+return atob(token)
+}
+
+
+// ==========================
+// UPLOAD KE GITHUB
+// ==========================
+async function uploadToGitHub(){
+
+const token = document.getElementById("classicToken").value.trim()
+const user = document.getElementById("githubUser").value.trim()
+const repo = document.getElementById("githubRepo").value.trim()
+
+if(!token) return alert("Token GitHub diperlukan")
+if(!user || !repo) return alert("Username dan repo harus diisi")
+
+const json = document.getElementById("jsonOutput").textContent
+
+if(!json) return alert("Generate JSON dulu")
+
+localStorage.setItem("github_token", encryptToken(token))
+
+const path = "data/prices.json"
+
+const url = `https://api.github.com/repos/${user}/${repo}/contents/${path}`
+
+
+// cek SHA file lama
+let sha = null
+
+try{
+
+const res = await fetch(url,{
+headers:{Authorization:"token "+token}
+})
+
+if(res.ok){
+const data = await res.json()
+sha = data.sha
+}
+
+}catch(err){
+console.warn("File belum ada",err)
+}
+
+
+// body upload
+const body = {
+
+message:"Update prices.json via admin tool",
+
+content:btoa(unescape(encodeURIComponent(json)))
+
+}
+
+if(sha) body.sha = sha
+
+
+fetch(url,{
+method:"PUT",
+headers:{
+Authorization:"token "+token,
+"Content-Type":"application/json"
+},
+body:JSON.stringify(body)
+})
+.then(res=>res.json())
+.then(data=>{
+console.log(data)
+alert("Upload ke GitHub berhasil")
+})
+.catch(err=>{
+console.error(err)
+alert("Upload gagal, cek console")
+})
+
+}
+
+function loadAutoData(){
+
+let data=localStorage.getItem("prices_generator_data")
+
+if(!data) return
+
+data=JSON.parse(data)
+
+document.getElementById("wa").value=data.wa||""
+
+document.getElementById("githubUser").value=data.githubUser||""
+document.getElementById("githubRepo").value=data.githubRepo||""
+document.getElementById("classicToken").value=data.githubToken||""
+
+container.innerHTML=""
+
+data.tokens.forEach(t=>{
+
+const locked=(t.name==="sidra"||t.name==="pi")
+
+createTokenCard(t.id,t.name,locked)
+
+const card=document.querySelector(`[data-id="${t.id}"]`)
+
+card.querySelector(".token-wallet").value=t.wallet
+card.querySelector(".token-normal").value=t.normal
+card.querySelector(".token-below").value=t.below
+card.querySelector(".token-minsell").value=t.minsell
+
+})
+
+}
+
+
+
+
+
+
+
+const imageTokenSelect = document.getElementById("imageTokenSelect");
+const tokenImageFile = document.getElementById("tokenImageFile");
+const imagePreview = document.getElementById("imagePreview");
+
+let tempImages = {}; // key = tokenId, value = File/Blob
+
+// ==========================
+// REFRESH DROPDOWN TANPA DUPLIKAT
+// ==========================
+function refreshTokenDropdown() {
+  const select = imageTokenSelect;
+  select.innerHTML = ""; // reset
+  const added = new Set();
+
+  document.querySelectorAll("#tokenContainer .card").forEach(card => {
+    const idToken = card.querySelector(".token-id").value.trim().toLowerCase();
+    const nameToken = card.querySelector(".token-name").value.trim();
+
+    if (added.has(idToken)) return; // skip duplicate
+    added.add(idToken);
+
+    const option = document.createElement("option");
+    option.value = idToken;
+    option.textContent = `${nameToken} (${idToken})`;
+    select.appendChild(option);
+  });
+}
+
+// ==========================
+// PREVIEW GAMBAR
+// ==========================
+tokenImageFile.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const tokenId = imageTokenSelect.value.toLowerCase();
+  const renamedFile = new File([file], tokenId + ".png", { type: file.type });
+  tempImages[tokenId] = renamedFile; // simpan sementara
+
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    imagePreview.innerHTML = `<img src="${ev.target.result}" style="max-width:100px; margin-right:10px;">
+                              <span>${renamedFile.name}</span>`;
+  };
+  reader.readAsDataURL(renamedFile);
+});
+
+// ==========================
+// UPLOAD GAMBAR KE GITHUB
+// ==========================
+async function uploadTokenImage() {
+  const token = document.getElementById("classicToken").value.trim();
+  const user = document.getElementById("githubUser").value.trim();
+  const repo = document.getElementById("githubRepo").value.trim();
+  const tokenId = imageTokenSelect.value.toLowerCase();
+
+  if (!token || !user || !repo) return alert("Isi GitHub token, username, dan repo!");
+  const file = tempImages[tokenId];
+  if (!file) return alert("Pilih file dulu!");
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64 = btoa(e.target.result);
+
+    const path = `images/${file.name}`;
+    const url = `https://api.github.com/repos/${user}/${repo}/contents/${path}`;
+
+    let sha = null;
+    try {
+      const res = await fetch(url, { headers: { Authorization: "token " + token }});
+      if (res.ok) sha = (await res.json()).sha;
+    } catch (err) { console.warn("File belum ada", err); }
+
+    const body = { message: `Upload image ${file.name}`, content: base64 };
+    if (sha) body.sha = sha;
+
+    fetch(url, { method:"PUT", headers:{Authorization:"token "+token,"Content-Type":"application/json"}, body:JSON.stringify(body)})
+      .then(r => r.json())
+      .then(()=>alert(`Upload ${file.name} berhasil!`))
+      .catch(()=>alert(`Upload gagal, cek console`));
+  };
+  reader.readAsBinaryString(file);
+}
+
+// ==========================
+// INIT
+// ==========================
+createTokenCard("SDA","sidra",true);
+createTokenCard("PI","pi",true);
+refreshTokenDropdown();
+
+// REFRESH OTOMATIS SETELAH ADD CUSTOM TOKEN
+function addCustomToken(){
+  createTokenCard("token"+Date.now(),"",false);
+  refreshTokenDropdown();
+}
+
+// REFRESH JUGA SETELAH IMPORT JSON
+// ...di akhir loop import
+// refreshTokenDropdown();
+
+
+
+
+
+// ==========================
+// LOAD TOKEN DARI STORAGE
+// ==========================
+if(localStorage.getItem("github_token")){
+
+document.getElementById("classicToken").value =
+decryptToken(localStorage.getItem("github_token"))
+
+}
+
+loadAutoData()
+
+document.addEventListener("input",autoSave)
+
+
+</script>
+</script>
+
+</body>
+</html>
