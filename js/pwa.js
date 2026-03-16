@@ -1,42 +1,52 @@
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
 
+// Detect install availability
 window.addEventListener("beforeinstallprompt", (e) => {
 
   e.preventDefault();
+
   deferredPrompt = e;
 
-  installBtn.style.display = "flex";
-
-});
-
-installBtn.addEventListener("click", async () => {
-
-  if (!deferredPrompt) return;
-
-  installBtn.style.display = "none";
-
-  deferredPrompt.prompt();
-
-  const result = await deferredPrompt.userChoice;
-
-  if (result.outcome === "accepted") {
-
-    console.log("User accepted install");
-
-  } else {
-
-    console.log("User dismissed install");
-
+  if (installBtn) {
+    installBtn.style.display = "flex";
   }
 
-  deferredPrompt = null;
-
 });
 
+// Click install
+if (installBtn) {
+
+  installBtn.addEventListener("click", async () => {
+
+    if (!deferredPrompt) return;
+
+    installBtn.style.display = "none";
+
+    deferredPrompt.prompt();
+
+    const result = await deferredPrompt.userChoice;
+
+    if (result.outcome === "accepted") {
+      console.log("PWA installed");
+    } else {
+      console.log("Install cancelled");
+    }
+
+    deferredPrompt = null;
+
+  });
+
+}
+
+// Hide after install
 window.addEventListener("appinstalled", () => {
 
-  installBtn.style.display = "none";
+  console.log("App installed");
+
+  if (installBtn) {
+    installBtn.style.display = "none";
+  }
 
   deferredPrompt = null;
 
