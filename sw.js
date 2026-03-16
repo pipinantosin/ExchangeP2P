@@ -1,70 +1,124 @@
-// ================= CACHE VERSION =================
+// ================================
+// BUNDAWIDYA EXCHANGER PWA SW
+// ================================
 
-const CACHE_NAME = 'bw-exchanger-cache-' + new Date().toISOString().replace(/[-:.TZ]/g,'');
+const CACHE_VERSION = "bw-exchanger-v1";
 
-const FILES_TO_CACHE = [
+const STATIC_CACHE = CACHE_VERSION + "-static";
+const DYNAMIC_CACHE = CACHE_VERSION + "-dynamic";
 
-  '/',
-  '/index.html',
+const APP_SHELL = [
 
-  '/css/style.css',
-  '/css/header.css',
-  '/css/dashboard.css',
-  '/css/toast.css',
+  "/exchangep2p/",
+  "/exchangep2p/index.html",
 
-  '/js/app.js',
-  '/js/config.js',
-  '/js/price.js',
-  '/js/exchanger.js',
-  '/js/history.js',
-  '/js/pwa.js',
+  "/exchangep2p/css/style.css",
+  "/exchangep2p/css/header.css",
+  "/exchangep2p/css/dashboard.css",
 
-  '/images/bunda-widya.jpg',
-  '/images/sidra.png',
-  '/images/pi.png'
+  "/exchangep2p/js/app.js",
+  "/exchangep2p/js/config.js",
+  "/exchangep2p/js/exchanger.js",
+  "/exchangep2p/js/pwa.js",
+
+  "/exchangep2p/images/bunda-widya.jpg"
+
 ];
 
+// ================================
 // INSTALL
+// ================================
 
-self.addEventListener('install', evt => {
+self.addEventListener("install", event => {
 
-  console.log('[SW] Install');
+  console.log("[SW] Installing...");
 
-  evt.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
+  event.waitUntil(
+
+    caches.open(STATIC_CACHE)
+      .then(cache => cache.addAll(APP_SHELL))
+
   );
 
   self.skipWaiting();
 
 });
 
+// ================================
 // ACTIVATE
+// ================================
 
-self.addEventListener('activate', evt => {
+self.addEventListener("activate", event => {
 
-  console.log('[SW] Activate');
+  console.log("[SW] Activated");
 
-  evt.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys.map(k => k !== CACHE_NAME ? caches.delete(k) : null)
-      )
-    )
+  event.waitUntil(
+
+    caches.keys().then(keys => {
+
+      return Promise.all(
+
+        keys.map(key => {
+
+          if (key !== STATIC_CACHE && key !== DYNAMIC_CACHE) {
+
+            return caches.delete(key);
+
+          }
+
+        })
+
+      );
+
+    })
+
   );
 
   self.clients.claim();
 
 });
 
+// ================================
 // FETCH
+// ================================
 
-self.addEventListener('fetch', evt => {
+self.addEventListener("fetch", event => {
 
-  if (evt.request.method !== 'GET') return;
+  if (event.request.method !== "GET") return;
 
-  evt.respondWith(
-    caches.match(evt.request)
-      .then(cached => cached || fetch(evt.request))
+  event.respondWith(
+
+    caches.match(event.request)
+
+      .then(cacheRes => {
+
+        if (cacheRes) return cacheRes;
+
+        return fetch(event.request)
+
+          .then(fetchRes => {
+
+            return caches.open(DYNAMIC_CACHE)
+
+              .then(cache => {
+
+                cache.put(event.request, fetchRes.clone());
+
+                return fetchRes;
+
+              });
+
+          })
+
+          .catch(() => {
+
+            // fallback ke index agar tidak 404
+            return caches.match("/exchangep2p/index.html");
+
+          });
+
+      })
+
   );
 
 });
