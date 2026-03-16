@@ -1,40 +1,70 @@
-const CACHE_NAME = "app-cache-v1";
+// ================= CACHE VERSION =================
 
-const urlsToCache = [
-  "/",
-  "/index.html",
-  "/manifest.json"
+const CACHE_NAME = 'bw-exchanger-cache-' + new Date().toISOString().replace(/[-:.TZ]/g,'');
+
+const FILES_TO_CACHE = [
+
+  '/',
+  '/index.html',
+
+  '/css/style.css',
+  '/css/header.css',
+  '/css/dashboard.css',
+  '/css/toast.css',
+
+  '/js/app.js',
+  '/js/config.js',
+  '/js/price.js',
+  '/js/exchanger.js',
+  '/js/history.js',
+  '/js/pwa.js',
+
+  '/images/bunda-widya.jpg',
+  '/images/sidra.png',
+  '/images/pi.png'
 ];
 
-self.addEventListener("install", event => {
+// INSTALL
+
+self.addEventListener('install', evt => {
+
+  console.log('[SW] Install');
+
+  evt.waitUntil(
+    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
+  );
 
   self.skipWaiting();
 
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+});
+
+// ACTIVATE
+
+self.addEventListener('activate', evt => {
+
+  console.log('[SW] Activate');
+
+  evt.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(k => k !== CACHE_NAME ? caches.delete(k) : null)
+      )
+    )
   );
+
+  self.clients.claim();
 
 });
 
-self.addEventListener("activate", event => {
+// FETCH
 
-  event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.filter(key => key !== CACHE_NAME)
-        .map(key => caches.delete(key))
-      );
-    })
-  );
+self.addEventListener('fetch', evt => {
 
-});
+  if (evt.request.method !== 'GET') return;
 
-self.addEventListener("fetch", event => {
-
-  event.respondWith(
-    caches.match(event.request)
-      .then(res => res || fetch(event.request))
+  evt.respondWith(
+    caches.match(evt.request)
+      .then(cached => cached || fetch(evt.request))
   );
 
 });
