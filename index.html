@@ -33,6 +33,7 @@
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="manifest" href="/ExchangeP2P/manifest.json">
 
  <!-- ===== UNREGISTER SW LAMA (DEV ONLY, BOLEH DIHAPUS NANTI) ===== -->
   <script>
@@ -739,18 +740,17 @@ track.innerHTML = track.innerHTML + track.innerHTML;
 
 if ('serviceWorker' in navigator) {
 
-  window.addEventListener('load', () => {
+window.addEventListener('load', () => {
 
-    navigator.serviceWorker.register('sw.js')
+navigator.serviceWorker.register('sw.js')
 
-      .then(reg => console.log("SW registered:", reg.scope))
+.then(reg => console.log("SW registered:", reg.scope))
 
-      .catch(err => console.log("SW error:", err));
+.catch(err => console.log("SW error:", err));
 
-  });
+});
 
 }
-
 </script>
 
 <script>
