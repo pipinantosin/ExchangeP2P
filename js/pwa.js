@@ -1,53 +1,39 @@
 let deferredPrompt;
+
 const installBtn = document.getElementById("installBtn");
 
-// Detect install availability
 window.addEventListener("beforeinstallprompt", (e) => {
 
-  e.preventDefault();
+e.preventDefault();
 
-  deferredPrompt = e;
+deferredPrompt = e;
 
-  if (installBtn) {
-    installBtn.style.display = "flex";
-  }
+installBtn.style.display = "flex";
 
 });
 
-// Click install
-if (installBtn) {
 
-  installBtn.addEventListener("click", async () => {
+installBtn.addEventListener("click", async () => {
 
-    if (!deferredPrompt) return;
+if (!deferredPrompt) return;
 
-    installBtn.style.display = "none";
+deferredPrompt.prompt();
 
-    deferredPrompt.prompt();
+const result = await deferredPrompt.userChoice;
 
-    const result = await deferredPrompt.userChoice;
+console.log("PWA install:", result.outcome);
 
-    if (result.outcome === "accepted") {
-      console.log("PWA installed");
-    } else {
-      console.log("Install cancelled");
-    }
+deferredPrompt = null;
 
-    deferredPrompt = null;
+installBtn.style.display = "none";
 
-  });
+});
 
-}
 
-// Hide after install
 window.addEventListener("appinstalled", () => {
 
-  console.log("App installed");
+console.log("PWA installed");
 
-  if (installBtn) {
-    installBtn.style.display = "none";
-  }
-
-  deferredPrompt = null;
+installBtn.style.display = "none";
 
 });
