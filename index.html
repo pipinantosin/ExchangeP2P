@@ -12,6 +12,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 	
+	<link rel="preload" as="image" href="images/bunda-widya.jpg">
+
+<meta name="theme-color" content="#6c5ce7">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="images/icon-192.png">
+	
 <title>Bundawidya Exchanger</title>
 <link rel="stylesheet" href="css/splash.css">
 <link rel="stylesheet" href="css/header.css">
@@ -675,7 +681,11 @@ Bundawidya Exchanger v1.0
 
 </div>
 
-
+<button id="installBtn" class="pwa-install-btn" style="display:none;">
+<img src="images/bunda-widya.jpg" class="pwa-logo">
+Install App
+<i class="fa-solid fa-download"></i>
+</button>
 <!-- ======================
 SCRIPT
 ====================== -->
@@ -707,21 +717,7 @@ SCRIPT
 <script src="js/info.js"></script>
 
 
-<button id="installBtn" style="display:none;">
-Install Bunda Widya Exchanger
-</button>
 
-<script src="js/pwa-install.js"></script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('✅ SW registered:', reg.scope))
-      .catch(err => console.log('❌ SW error:', err));
-  });
-}
-</script>
 
 <script>
 const track = document.getElementById("tickerTrack");
@@ -731,6 +727,42 @@ track.innerHTML = track.innerHTML + track.innerHTML;
 
 </script>
 
+<script src="js/pwa.js"></script>
 
+<script>
+if ('serviceWorker' in navigator) {
+
+  window.addEventListener('load', () => {
+
+    navigator.serviceWorker.register('sw.js')
+
+      .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+
+      .catch(err => console.log('❌ SW error:', err));
+
+  });
+
+}
+</script>
+
+<script>
+(function(){
+  const version = new Date().toISOString().slice(0,10).replace(/-/g,'');
+
+  document.querySelectorAll('link[rel="stylesheet"]').forEach(link=>{
+    const href = link.getAttribute('href');
+    if(href && !href.includes('?v=')){
+      link.setAttribute('href', href + '?v=' + version);
+    }
+  });
+
+  document.querySelectorAll('script[src]').forEach(script=>{
+    const src = script.getAttribute('src');
+    if(src && !src.includes('?v=')){
+      script.setAttribute('src', src + '?v=' + version);
+    }
+  });
+})();
+</script>
 </body>
 </html>
