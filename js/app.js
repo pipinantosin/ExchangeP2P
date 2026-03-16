@@ -168,3 +168,74 @@ document.getElementById("clearStorageBtn").onclick = () => {
 
 };
 
+
+
+
+// ===============================
+// SERVICE WORKER & AUTO UPDATE
+// ===============================
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js')
+    .then(reg => {
+      console.log('Service Worker registered.');
+
+      // Deteksi update service worker
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            alert('Update tersedia! Refresh halaman untuk mendapatkan versi terbaru.');
+          }
+        });
+      });
+    })
+    .catch(err => console.log('SW registration failed: ', err));
+}
+
+// ===============================
+// PWA INSTALL PROMPT & FLOATING BADGE
+// ===============================
+let deferredPrompt;
+
+// Tangkap event sebelum install
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();                // cegah prompt otomatis
+  deferredPrompt = e;                // simpan untuk trigger manual
+
+  const badge = document.getElementById('premiumBadge');
+  if(badge) badge.style.display = 'flex'; // tampilkan floating logo
+});
+
+// Klik floating badge untuk install
+const badge = document.getElementById('premiumBadge');
+if(badge){
+  badge.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();                 // munculkan prompt install
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log('Install choice:', outcome);
+      deferredPrompt = null;
+
+      if (outcome === 'accepted') {
+        badge.style.display = 'none';         // sembunyikan logo setelah install
+      }
+    } else {
+      alert('🌟 Premium Mode Active!');
+    }
+  });
+}
+
+// ===============================
+// CEK JIKA APP SUDAH DIINSTALL
+// ===============================
+function hideBadgeIfInstalled(){
+  const badge = document.getElementById('premiumBadge');
+  if(!badge) return;
+
+  if(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone){
+    badge.style.display = 'none';
+  }
+}
+
+// Jalankan saat load
+window.addEventListener('load', hideBadgeIfInstalled);
