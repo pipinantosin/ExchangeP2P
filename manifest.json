@@ -2,12 +2,12 @@
   "name": "Bundawidya Exchanger",
   "short_name": "BW Exchanger",
   "description": "Crypto Swap Sidra, Pi Network dan USDT dengan proses cepat.",
-  "start_url": "./index.html",
-  "scope": "./"
+  "start_url": "/exchangep2p/index.html",
+  "scope": "/exchangep2p/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#ffffff",
-  "theme_color": "#6c5ce7",
+  "background_color": "#fff8e7",
+  "theme_color": "#f6b042",
   "icons": [
     {
       "src": "images/bunda-widya.jpg",
