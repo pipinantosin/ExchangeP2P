@@ -10,29 +10,29 @@
   "theme_color": "#f6b042",
   "icons": [
     {
-      "src": "images/bunda-widya.jpg",
+      "src": "images/pi.png",
       "sizes": "72x72",
       "type": "image/jpg"
     },
     {
-      "src": "images/bunda-widya.jpg",
+      "src": "images/pi.png",
       "sizes": "96x96",
-      "type": "image/jpg"
+      "type": "image/png"
     },
     {
-      "src": "images/bunda-widya.jpg",
+      "src": "images/pi.png",
       "sizes": "144x144",
-      "type": "image/jpg"
+      "type": "image/png"
     },
     {
-      "src": "images/bunda-widya.jpg",
+      "src": "images/pi.png",
       "sizes": "192x192",
-      "type": "image/jpg"
+      "type": "image/png"
     },
     {
-      "src": "images/bunda-widya.jpg",
+      "src": "images/pi.png",
       "sizes": "512x512",
-      "type": "image/jpg"
+      "type": "image/png"
     }
   ]
 }
