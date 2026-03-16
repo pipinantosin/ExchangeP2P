@@ -1,4 +1,4 @@
-const CACHE_NAME = "bw-exchanger-v1";
+const CACHE_NAME = "bw-exchanger-v2";
 
 const urlsToCache = [
 
