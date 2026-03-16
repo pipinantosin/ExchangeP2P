@@ -506,51 +506,28 @@ color:white;
 
 
 #premiumBadge{
-  position: fixed;
-  top: 70px;           /* geser sedikit ke bawah supaya tidak menutupi header */
-  right: 12px;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 0 0 12px #f97316;
-  animation: blinkLogo 1s infinite;
-  z-index: 9999;
-  cursor: pointer;
-  border: 2px solid #f59e0b;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+position:fixed;
+top:70px;
+right:15px;
+width:50px;
+height:50px;
+border-radius:50%;
+overflow:hidden;
+box-shadow:0 0 10px #ff9800;
+animation:blink 1.5s infinite;
+z-index:9999;
+cursor:pointer;
+display:none;
 }
 
-#premiumBadge .premium-logo{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+#premiumBadge img{
+width:100%;
+height:100%;
+object-fit:cover;
 }
 
-#installLabel{
-  position: absolute;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #f97316;
-  color: white;
-  font-size: 10px;
-  font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 4px;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.2s;
-}
-
-#premiumBadge:hover #installLabel,
-#premiumBadge:active #installLabel{
-  opacity: 1;
-}
-
-@keyframes blinkLogo{
-  0%,50%,100%{ opacity:1; transform: scale(1);}
-  25%,75%{ opacity:0.5; transform: scale(1.1);}
+@keyframes blink{
+0%{transform:scale(1)}
+50%{transform:scale(1.15)}
+100%{transform:scale(1)}
 }
