@@ -738,19 +738,21 @@ track.innerHTML = track.innerHTML + track.innerHTML;
 <script src="js/pwa.js"></script>
 
 <script>
+
 if ('serviceWorker' in navigator) {
 
   window.addEventListener('load', () => {
 
-    navigator.serviceWorker.register('sw.js')
+    navigator.serviceWorker.register('/exchangep2p/sw.js')
 
-      .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+      .then(reg => console.log("SW registered:", reg.scope))
 
-      .catch(err => console.log('❌ SW error:', err));
+      .catch(err => console.log("SW error:", err));
 
   });
 
 }
+
 </script>
 
 <script>
