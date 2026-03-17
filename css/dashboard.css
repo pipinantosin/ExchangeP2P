@@ -505,3 +505,33 @@ color:white;
 }
 
 
+
+#generatedLink{
+background:#f6f7fb;
+padding:10px;
+border-radius:8px;
+font-size:13px;
+margin-top:8px;
+}
+
+.dark #generatedLink{
+background:#1f2330;
+}
+
+#generatedLink a{
+display:block;
+word-break:break-all;
+overflow-wrap:anywhere;
+color:#2563eb;
+text-decoration:none;
+}
+
+.blink{
+animation: blinkAnim 0.5s ease-in-out 3;
+}
+
+@keyframes blinkAnim{
+0%{opacity:1}
+50%{opacity:0.3}
+100%{opacity:1}
+}
