@@ -11,7 +11,7 @@ const previewReceive = document.getElementById("previewReceive");
 const previewPayment = document.getElementById("previewPayment");
 const previewWallet  = document.getElementById("previewWallet");
 
-const sidraWallet = window.APP_CONFIG?.WALLETS?.SIDRA;
+
 
 
 
@@ -217,46 +217,113 @@ if(sellToken){
 
 
 // =================================
-// GENERATE TRANSACTION
+// GENERATE TRANSACTION (FIXED)
 // =================================
 
 document.getElementById("generateBtn").onclick = () => {
 
     const amount = parseFloat(sellAmount.value);
 
-    if(!amount){
+    if(!amount || isNaN(amount)){
         toast("Masukkan jumlah token");
         return;
     }
 
     const token = sellToken.value;
 
+    // ===============================
+    // CEK CONFIG READY
+    // ===============================
+    if(!window.APP_CONFIG || !window.APP_CONFIG.WALLETS){
+        toast("Config belum siap, tunggu sebentar...");
+        console.error("APP_CONFIG belum ready:", window.APP_CONFIG);
+        return;
+    }
+
+    let link = "";
+
+    // ===============================
+    // SIDRA
+    // ===============================
     if(token === "sidra"){
 
-        const link =
+        const sidraWallet = window.APP_CONFIG.WALLETS.SIDRA;
+
+        // VALIDASI WAJIB (anti [object HTMLInputElement])
+        if(!sidraWallet || typeof sidraWallet !== "string"){
+            toast("Wallet SIDRA tidak valid");
+            console.error("SIDRA WALLET ERROR:", sidraWallet);
+            return;
+        }
+
+        link =
             "https://www.sidrachain.com/wallets/send?to=" +
-            sidraWallet +
+            sidraWallet.trim() +
             "&amount=" +
             amount +
             "&currency=SDA";
 
-        generatedLink.innerHTML =
-            `<a href="${link}" target="_blank">Kirim Sidra</a>`;
+    }
 
-        generateQR(link);
+    // ===============================
+    // PI (opsional kalau dipakai)
+    // ===============================
+    else if(token === "pi"){
+
+        const piWallet = window.APP_CONFIG.WALLETS.PI;
+
+        if(!piWallet || typeof piWallet !== "string"){
+            toast("Wallet PI tidak valid");
+            console.error("PI WALLET ERROR:", piWallet);
+            return;
+        }
+
+        link =
+            "https://wallet.minepi.com/pay?recipient=" +
+            piWallet.trim() +
+            "&amount=" +
+            amount;
 
     }
 
+    // ===============================
+    // VALIDASI LINK
+    // ===============================
+    if(!link){
+        toast("Token tidak dikenali");
+        return;
+    }
+
+    // ===============================
+    // OUTPUT LINK
+    // ===============================
+    generatedLink.innerHTML =
+        `<a href="${link}" target="_blank">${link}</a>`;
+
+    // ===============================
+    // QR CODE
+    // ===============================
+    if(typeof generateQR === "function"){
+        generateQR(link);
+    }
+
+    // ===============================
+    // SAVE HISTORY
+    // ===============================
     addHistory({
         token: token,
         amount: amount,
-        total: rupiahPreview.innerText
+        total: rupiahPreview.innerText,
+        link: link,
+        time: Date.now()
     });
 
+    // ===============================
+    // SUCCESS
+    // ===============================
     toast("Transaksi dibuat");
 
 };
-
 
 // ===============================
 // LOAD ACCOUNT PREVIEW
