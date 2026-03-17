@@ -116,6 +116,8 @@ if(selectedCurrency === "usdt"){
 
 const tokenHTML = `${tokenIcon} ${amount} ${token.toUpperCase()}`;
 
+
+
     // ===============================
     // MODE SELL
     // ===============================
@@ -298,14 +300,46 @@ document.getElementById("generateBtn").onclick = () => {
     // OUTPUT LINK
     // ===============================
     generatedLink.innerHTML =
-        `<a href="${link}" target="_blank">${link}</a>`;
+    `<a href="${link}" target="_blank">${link}</a>`;
+
+// ===============================
+// SCROLL OTOMATIS (LEBIH ATAS)
+// ===============================
+setTimeout(() => {
+
+    const yOffset = -210; // atur posisi (biar input hash ikut keliatan)
+    const y = generatedLink.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+    window.scrollTo({
+        top: y,
+        behavior: "smooth"
+    });
 
     // ===============================
-    // QR CODE
+    // BLINK EFFECT
     // ===============================
-    if(typeof generateQR === "function"){
-        generateQR(link);
+    generatedLink.classList.add("blink");
+
+    setTimeout(() => {
+        generatedLink.classList.remove("blink");
+    }, 1500);
+
+    // ===============================
+    // OPTIONAL: FOCUS KE INPUT HASH
+    // ===============================
+    if(typeof txHashInput !== "undefined" && txHashInput){
+        txHashInput.focus();
     }
+
+}, 100);
+
+
+// ===============================
+// QR CODE
+// ===============================
+if(typeof generateQR === "function"){
+    generateQR(link);
+}
 
     // ===============================
     // SAVE HISTORY
