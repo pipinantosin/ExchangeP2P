@@ -87,3 +87,16 @@ return response || fetch(event.request);
 );
 
 });
+
+// PUSH NOTIFICATION
+self.addEventListener('push', event => {
+  let data = {title: 'Notifikasi', body: 'Transaksi baru masuk'};
+  if(event.data){
+    data = event.data.json();
+  }
+
+  self.registration.showNotification(data.title, {
+    body: data.body,
+    icon: 'images/sda.png'
+  });
+});
