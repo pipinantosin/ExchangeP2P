@@ -1,4 +1,4 @@
-const CACHE_NAME = "bw-exchanger-v3";
+const CACHE_NAME = "bw-exchanger-v1";
 
 const urlsToCache = [
 
@@ -10,11 +10,26 @@ const urlsToCache = [
 "/exchangep2p/css/header.css",
 "/exchangep2p/css/modal.css",
 
-"/exchangep2p/js/app.js",
 "/exchangep2p/js/config.js",
-"/exchangep2p/js/exchanger.js",
+"/exchangep2p/js/alur-transaksi.js",
 "/exchangep2p/js/blockchain.js",
+
+"/exchangep2p/js/history.js",
+
+"/exchangep2p/js/app.js",
+"/exchangep2p/js/account.js",
+"/exchangep2p/js/user.js",
 "/exchangep2p/js/price.js",
+"/exchangep2p/js/wa.js",
+"/exchangep2p/js/exchanger.js",
+"/exchangep2p/js/qr.js",
+"/exchangep2p/js/toast.js",
+"/exchangep2p/js/splash.js",
+"/exchangep2p/js/dashboard-mode.js",
+"/exchangep2p/js/currency-toggle.js",
+"/exchangep2p/js/settings.js",
+"/exchangep2p/js/lang.js",
+"/exchangep2p/js/info.js",
 
 "/exchangep2p/images/pi.png",
 "/exchangep2p/images/sda.png",
