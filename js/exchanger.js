@@ -11,8 +11,7 @@ const previewReceive = document.getElementById("previewReceive");
 const previewPayment = document.getElementById("previewPayment");
 const previewWallet  = document.getElementById("previewWallet");
 
-const generatedLink = document.getElementById("generatedLink");
-
+const sidraWallet = window.APP_CONFIG?.WALLETS?.SIDRA;
 
 
 
