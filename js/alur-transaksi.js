@@ -186,6 +186,15 @@ tx = await verifyTxFull(txHash);
 
 window.VERIFIED_TX = tx;
 
+
+// ===============================
+// CEK HASH KE GOOGLE SHEET
+// ===============================
+const check = await checkHash(tx.hash);
+
+if(check.exists){
+  throw "Hash sudah digunakan (global)";
+}
 // ===============================
 // CEK HASH SUDAH DIPAKAI
 // ===============================
@@ -258,6 +267,17 @@ verifyMessage.innerText = "Transaksi valid ✅";
 verifyMessage.style.color = "green";
 
 step4?.classList.add("active");
+
+// ===============================
+// SIMPAN KE GOOGLE SHEET
+// ===============================
+await saveTx({
+  orderId: "-", // nanti bisa kita upgrade pakai order ID
+  hash: tx.hash,
+  from: tx.from,
+  amount: tx.value,
+  total: tx.total
+});
 
 // ===============================
 // TAMPILKAN CARD VERIFIKASI
