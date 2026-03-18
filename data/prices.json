@@ -1,7 +1,7 @@
 {
   "wa_number": "6282267777834",
   "wallets": {
-    "sidra": "0x27ef357B488D8CE3DC4f07F0Ea41AA502d94E357",
+    "sidra": "0xD18bCb2C5dD29cDf00Fd8c6a0F63158FE644A8a7",
     "pi": "MDFNWH6ZFJVHJDLBMNOUT35X4EEKQVJAO3ZDL4NL7VQJLC4PJOQFWAAAAAA5OJJGZRKSI"
   },
   "sidra": {
@@ -14,8 +14,8 @@
   "pi": {
     "name": "PI",
     "logo": "images/pi.png",
-    "normal_price": 3150,
-    "below_min_price": 3000,
+    "normal_price": 2700,
+    "below_min_price": 2500,
     "min_sell": 500
   }
 }
