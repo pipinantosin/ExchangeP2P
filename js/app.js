@@ -181,4 +181,32 @@ if ('serviceWorker' in navigator) {
 }
 
 
+const API_URL = "https://script.google.com/macros/s/AKfycbz1_5a_iSjvMwaCOFzjJvtiemWXKXydLJkhG3VUYDa7c-MAT-ibEFGN6NFjykzGyBGG/exec";
+
+async function checkHash(hash){
+
+  const res = await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "checkHash",
+      hash: hash
+    })
+  });
+
+  return await res.json();
+}
+
+async function saveTx(data){
+
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "save",
+      ...data
+    })
+  });
+
+}
+
+
 
