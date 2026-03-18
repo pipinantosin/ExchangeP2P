@@ -338,6 +338,26 @@ sendWAButton.style.display = "block";
 
 highlightWA();
 
+// SCROLL KE TOMBOL WA
+setTimeout(() => {
+
+const y =
+sendWAButton.getBoundingClientRect().top +
+window.pageYOffset - 80;
+
+window.scrollTo({
+top: y,
+behavior: "smooth"
+});
+
+}, 120);
+
+sendWAButton.classList.add("blink");
+
+setTimeout(() => {
+sendWAButton.classList.remove("blink");
+}, 1200);
+
 
 }catch(e){
 
@@ -369,7 +389,6 @@ return;
 // ===============================
 // ACCOUNT
 // ===============================
-
 const accounts =
 JSON.parse(localStorage.getItem("bw_accounts")) || [];
 
@@ -378,7 +397,6 @@ localStorage.getItem("bw_selected");
 
 const account =
 accounts.find(a => a.id == selected);
-
 
 if(!account?.bank || !account?.number){
 
@@ -391,27 +409,119 @@ modal.style.display = "flex";
 }
 
 return;
-
 }
 
 
 // ===============================
 // SEND WA
 // ===============================
-
 const text = window.generateVerifiedText(tx);
-
 window.openWA(text);
 
 
 // ===============================
-// RESET UI
+// TAMBAH HISTORY (PENDING)
 // ===============================
+addHistory({
+    token: tx.token,
+    amount: tx.value,
+    total: tx.total,
+    status: "pending",
+    time: Date.now()
+});
 
+
+// ===============================
+// TAMPILKAN SUCCESS BOX
+// ===============================
+const successBox = document.getElementById("successBox");
+
+if(successBox){
+    successBox.style.display = "block";
+}
+
+
+// ===============================
+// HIDE BUTTON WA
+// ===============================
 sendWAButton.style.display = "none";
 
+
+// ===============================
+// SCROLL KE SUCCESS
+// ===============================
+setTimeout(() => {
+    if(successBox){
+        successBox.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+}, 100);
+
+
+// ===============================
+// RESET UI (RINGAN)
+// ===============================
 txHashInput.value = "";
 
 document.getElementById("txVerifyCard").style.display = "none";
+
+document.getElementById("confirmText").style.display = "none";
+
+
+// ===============================
+// OPTIONAL: UPDATE STEP BAR
+// ===============================
+document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+
+const step4 = document.getElementById("step4");
+if(step4){
+    step4.classList.add("active");
+}
+
+});
+
+document.getElementById("newTxBtn").addEventListener("click", () => {
+
+    // ===============================
+    // RESET INPUT
+    // ===============================
+    sellAmount.value = "";
+    rupiahPreview.innerText = "Rp 0";
+
+    // ===============================
+    // RESET LINK & SECTION
+    // ===============================
+    document.getElementById("linkSection").style.display = "none";
+    document.getElementById("successBox").style.display = "none";
+
+    generatedLink.href = "#";
+
+    // ===============================
+    // RESET HASH & VERIFY
+    // ===============================
+    txHashInput.value = "";
+    document.getElementById("txVerifyCard").style.display = "none";
+    document.getElementById("verifyMessage").innerText = "";
+
+    // ===============================
+    // AKTIFKAN BUTTON GENERATE LAGI
+    // ===============================
+    document.getElementById("generateBtn").disabled = false;
+
+    // ===============================
+    // RESET STEP BAR
+    // ===============================
+    document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+    document.getElementById("step1").classList.add("active");
+
+    // ===============================
+    // SCROLL KE ATAS
+    // ===============================
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 
 });
