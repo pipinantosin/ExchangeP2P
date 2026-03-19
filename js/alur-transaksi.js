@@ -85,53 +85,75 @@ step1?.classList.remove("active");
 // ===============================
 generateBtn.addEventListener("click", () => {
 
-step2?.classList.add("active");
-linkSection.style.display = "block";
-highlightLink();
+  if(!window.APP_CONFIG || !window.APP_CONFIG.WALLETS){
+    alert("Config belum siap");
+    return;
+  }
 
-const token  = document.getElementById("sellToken").value;
-const amount = parseFloat(sellAmountInput.value);
+  const amount = parseFloat(sellAmountInput.value);
+  const token  = document.getElementById("sellToken").value;
 
-let link = "";
+  const orderId = Date.now();
 
-// SIDRA
-if(token === "sidra"){
+  localStorage.setItem("CURRENT_ORDER", JSON.stringify({
+    id: orderId,
+    amount: amount,
+    time: Date.now()
+  }));
 
-const sidraWallet = window.APP_CONFIG?.WALLETS?.SIDRA || "0x";
+  step2?.classList.add("active");
+  linkSection.style.display = "block";
+  highlightLink();
 
-link =
-`https://www.sidrachain.com/wallets/send?to=${sidraWallet}&amount=${amount}&currency=SDA`;
+  let link = "";
 
-}
+  if(token === "sidra"){
 
-// PI
-if(token === "pi"){
+    const sidraWallet = window.APP_CONFIG.WALLETS.SIDRA;
 
-const piWallet = window.APP_CONFIG?.WALLETS?.PI || "";
+    if(!sidraWallet){
+      alert("Wallet SIDRA tidak ada");
+      return;
+    }
 
-link =
-`https://wallet.minepi.com/pay?recipient=${piWallet}&amount=${amount}`;
+    link =
+    `https://www.sidrachain.com/wallets/send?to=${sidraWallet}&amount=${amount}&currency=SDA`;
 
-}
+  }
 
-generatedLinkEl.href = link;
+  if(token === "pi"){
 
+    const piWallet = window.APP_CONFIG.WALLETS.PI;
 
-// QR CODE
-if(typeof QRCode === "function"){
+    if(!piWallet){
+      alert("Wallet PI tidak ada");
+      return;
+    }
 
-document.getElementById("qrcode").innerHTML = "";
+    link =
+    `https://wallet.minepi.com/pay?recipient=${piWallet}&amount=${amount}`;
 
-new QRCode(document.getElementById("qrcode"),{
-text:link,
-width:150,
-height:150
+  }
+
+  if(!link){
+    alert("Token tidak dikenali");
+    return;
+  }
+
+  generatedLinkEl.href = link;
+
+  // QR
+  if(typeof QRCode === "function"){
+    document.getElementById("qrcode").innerHTML = "";
+
+    new QRCode(document.getElementById("qrcode"),{
+      text: link,
+      width:150,
+      height:150
+    });
+  }
+
 });
-
-}
-
-});
-
 
 // ===============================
 // STEP 3: CLICK LINK
@@ -271,8 +293,10 @@ step4?.classList.add("active");
 // ===============================
 // SIMPAN KE GOOGLE SHEET
 // ===============================
+const orderId = generateOrderID(tx.hash);
+
 await saveTx({
-  orderId: "-", // nanti bisa kita upgrade pakai order ID
+  orderId: orderId,
   hash: tx.hash,
   from: tx.from,
   amount: tx.value,
