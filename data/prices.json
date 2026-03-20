@@ -14,8 +14,8 @@
   "pi": {
     "name": "PI",
     "logo": "images/pi.png",
-    "normal_price": 2700,
-    "below_min_price": 2500,
+    "normal_price": 2900,
+    "below_min_price": 2700,
     "min_sell": 500
   }
 }
