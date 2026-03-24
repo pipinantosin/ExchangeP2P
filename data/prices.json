@@ -7,8 +7,8 @@
   "sidra": {
     "name": "SDA",
     "logo": "images/sda.png",
-    "normal_price": 450,
-    "below_min_price": 350,
+    "normal_price": 400,
+    "below_min_price": 300,
     "min_sell": 500
   },
   "pi": {
